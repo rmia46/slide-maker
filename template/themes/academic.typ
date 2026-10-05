@@ -17,7 +17,9 @@
   set document(title: title, author: meta.at("presenter", default: "Faculty"))
   set page(
     paper: "presentation-16-9",
-    margin: (x: 2.2cm, top: 1.6cm, bottom: 1.4cm),
+    margin: (x: 2.2cm, top: 2.2cm, bottom: 2.0cm),
+    header-ascent: 35%,
+    footer-descent: 35%,
     header: context {
       let page-num = counter(page).get().first()
       if page-num > 1 {
@@ -48,10 +50,10 @@
 
   set text(
     font: ("Inter", "DejaVu Sans"),
-    size: 14pt,
-    fill: color-text-dark,
-    spacing: 120%
+    size: 13pt,
+    fill: color-text-dark
   )
+  set par(leading: 0.55em)
 
   body
 }
@@ -126,29 +128,29 @@
 
   let bullets = slide.at("bullets", default: ())
   let count = bullets.len()
-  let spacing = if count <= 3 { 0.8em } else if count <= 4 { 0.5em } else { 0.3em }
+  let spacing = if count <= 3 { 0.6em } else if count <= 4 { 0.3em } else { 0.2em }
 
   for b in bullets {
     grid(
       columns: (18pt, 1fr),
       align: (top + left, top + left),
       text(fill: color-accent, size: 14pt)[•],
-      text(size: 13.5pt)[#render-text(b)]
+      text(size: 13pt)[#render-text(b)]
     )
     v(spacing)
   }
 
   if "callout" in slide {
-    v(1fr)
+    v(0.5em)
     rect(
       stroke: (left: 3.5pt + color-accent),
       fill: none,
       width: 100%,
       inset: (left: 12pt, y: 4pt),
       [
-        #text(size: 9pt, weight: "bold", fill: color-accent, tracking: 0.8pt)[KEY TAKEAWAY] \
+        #text(size: 8.5pt, weight: "bold", fill: color-accent, tracking: 0.8pt)[KEY TAKEAWAY] \
         #v(1pt)
-        #text(size: 12pt, fill: color-primary, weight: "medium", style: "italic")[#render-text(slide.callout)]
+        #text(size: 11.5pt, fill: color-primary, weight: "medium", style: "italic")[#render-text(slide.callout)]
       ]
     )
   }

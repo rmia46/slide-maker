@@ -17,7 +17,9 @@
   set document(title: title, author: meta.at("presenter", default: "Faculty"))
   set page(
     paper: "presentation-16-9",
-    margin: (x: 2.0cm, top: 1.5cm, bottom: 1.6cm),
+    margin: (x: 2.2cm, top: 2.2cm, bottom: 2.0cm),
+    header-ascent: 35%,
+    footer-descent: 35%,
     header: context {
       let page-num = counter(page).get().first()
       if page-num > 1 {
