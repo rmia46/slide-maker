@@ -155,7 +155,7 @@
   }
 }
 
-// 3. Split Image / Diagram Slide (Direct placement, large visual)
+// 3. Split Image / Diagram Slide (Large, prominent visual taking half the slide)
 #let render-split-slide(slide, meta, colors) = {
   slide-header(
     slide.at("title", default: "Slide Title"),
@@ -177,14 +177,14 @@
         text(fill: colors.accent, size: 13pt)[•],
         text(size: 13pt, fill: colors.primary)[#render-text(b)]
       )
-      v(0.5em)
+      v(0.6em)
     }
   ]
 
   let visual-col = [
     #align(center + horizon)[
       #if img-path != none {
-        image(img-path, fit: "contain", height: 5.4cm)
+        image(img-path, width: 100%, height: 7.2cm, fit: "contain")
       } else {
         text(fill: colors.muted)[(No visual provided)]
       }
@@ -195,13 +195,51 @@
     ]
   ]
 
-  let cols = if image-pos == "left" { (1.1fr, 1fr) } else { (1fr, 1.15fr) }
+  // Balanced 50/50 split so diagram is large and readable without zooming
+  let cols = if image-pos == "left" { (1.1fr, 0.9fr) } else { (0.9fr, 1.1fr) }
   grid(
     columns: cols,
-    gutter: 1.2cm,
+    gutter: 1.0cm,
     if image-pos == "left" { visual-col } else { text-col },
     if image-pos == "left" { text-col } else { visual-col }
   )
+}
+
+// 3b. Full-Width Diagram / Image Slide (When visual needs maximum canvas space)
+#let render-full-diagram-slide(slide, meta, colors) = {
+  slide-header(
+    slide.at("title", default: "Architecture Diagram"),
+    colors,
+    category: slide.at("category", default: none),
+    subtitle: slide.at("subtitle", default: none)
+  )
+
+  let img-path = resolve-image-path(slide.at("image", default: none))
+  let caption = slide.at("caption", default: none)
+  let takeaway = slide.at("takeaway", default: slide.at("callout", default: none))
+
+  align(center + horizon)[
+    #if img-path != none {
+      image(img-path, width: 100%, height: if takeaway != none { 6.8cm } else { 7.6cm }, fit: "contain")
+    }
+    #if caption != none {
+      v(2pt)
+      text(size: 9.5pt, fill: colors.muted, style: "italic")[#caption]
+    }
+  ]
+
+  if takeaway != none {
+    v(0.3em)
+    rect(
+      stroke: (left: 3pt + colors.accent),
+      fill: none,
+      width: 100%,
+      inset: (left: 10pt, y: 3pt),
+      text(size: 11pt, fill: colors.primary, weight: "medium")[
+        *Takeaway:* #render-text(takeaway)
+      ]
+    )
+  }
 }
 
 // 4. Comparison Slide (Clean dual columns, no heavy cards)
@@ -306,7 +344,7 @@
   }
 }
 
-// 6. Code Slide
+// 6. Code Slide (Prominent code block taking 55-60% of slide)
 #let render-code-slide(slide, meta, colors) = {
   slide-header(
     slide.at("title", default: "Code Implementation"),
@@ -318,17 +356,21 @@
   let lang = slide.at("language", default: "python")
   let bullets = slide.at("bullets", default: ())
 
+  // Auto-scale font size so code is as large as possible without pagebreak
+  let line-count = code-str.trim().split("\n").len()
+  let code-font-size = if line-count <= 10 { 11.5pt } else if line-count <= 16 { 10pt } else if line-count <= 22 { 8.8pt } else { 7.8pt }
+
   grid(
-    columns: (1.35fr, 1fr),
-    gutter: 1.2cm,
+    columns: (1.4fr, 1fr),
+    gutter: 1.0cm,
     rect(
       fill: rgb("#1e293b"),
       radius: 4pt,
-      inset: 10pt,
+      inset: (x: 12pt, y: 10pt),
       width: 100%,
       [
-        #set text(font: ("JetBrainsMono NF", "DejaVu Sans Mono"), size: 9pt, fill: rgb("#f8fafc"))
-        #raw(code-str, lang: lang, block: true)
+        #set text(font: ("JetBrainsMono NF", "DejaVu Sans Mono"), size: code-font-size, fill: rgb("#f8fafc"))
+        #raw(code-str.trim(), lang: lang, block: true)
       ]
     ),
     [
@@ -351,6 +393,8 @@
   
   if layout == "title" {
     render-title-slide(slide, meta, colors)
+  } else if layout == "diagram" or layout == "image" {
+    render-full-diagram-slide(slide, meta, colors)
   } else if layout == "split-diagram" or layout == "split-image" {
     render-split-slide(slide, meta, colors)
   } else if layout == "comparison" {
