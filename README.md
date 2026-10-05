@@ -32,18 +32,40 @@ Designed for seamless **Human + Agentic AI** collaboration:
 
 ---
 
+## Theme System
+
+Set `meta.theme` in `slides.yaml`:
+
+```yaml
+meta:
+  theme: "academic"   # "academic" (default) | "minimal" | "modern"
+  title: "Course / Presentation Title"
+```
+
+| Theme | Focus & Aesthetics |
+| :--- | :--- |
+| **`academic`** *(Default)* | Projector-optimized, large readable typography, space-efficient, no web cards or pill badges, pure academic hierarchy. |
+| **`minimal`** | Monochrome, high-contrast zinc palette, restrained rule dividers, elegant serif/sans mix. |
+| **`modern`** | Card-based layouts, pill category tags, subtle background tints and container borders. |
+
+---
+
 ## File Structure
 
 ```
 slide-maker/
-├── slides.yaml            # The intermediate representation (Content & Structure)
+├── slides.yaml            # Intermediate representation (Content, Layouts, Theme)
 ├── slides.typ             # Root compilation entry point
 ├── slide-maker            # CLI executable (build, watch, export-images)
 ├── assets/                # Local diagrams, SVGs, and graphics
 │   └── consensus-diagram.svg
 ├── template/
-│   ├── theme.typ          # Design system, layout components, and typography
-│   └── main.typ           # Standalone entry point
+│   ├── theme.typ          # Dynamic theme dispatcher
+│   └── themes/
+│       ├── academic.typ   # Default academic theme
+│       ├── minimal.typ    # Minimalist monochrome theme
+│       ├── modern.typ     # Card / boxed modern theme
+│       └── common.typ     # Shared math & text parsers
 └── dist/
     └── slides/            # Exported PNGs (when requested)
 ```

@@ -1,4 +1,5 @@
 meta:
+  theme: "academic"
   title: "CS 739: Distributed Systems Architecture"
   faculty: "Department of Computer Sciences"
   presenter: "Prof. Alan Kay"
