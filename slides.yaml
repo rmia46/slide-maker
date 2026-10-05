@@ -1,0 +1,103 @@
+meta:
+  title: "CS 739: Distributed Systems Architecture"
+  faculty: "Department of Computer Sciences"
+  presenter: "Prof. Alan Kay"
+  date: "Fall Semester 2026"
+
+slides:
+  - layout: "title"
+    title: "Consensus Protocols in Distributed Storage"
+    subtitle: "Formal Mechanisms of Raft, Multi-Paxos, and Viewstamped Replication"
+    faculty: "Department of Computer Sciences • Systems Group"
+    presenter: "Prof. Alan Kay"
+    date: "Lecture 08 • Fall 2026"
+
+  - layout: "content"
+    category: "FOUNDATIONS"
+    title: "The Consensus Problem: Formal Bounds"
+    subtitle: "State Machine Replication under Asynchronous Network Assumptions"
+    bullets:
+      - "**FLP Impossibility Result**: Deterministic asynchronous consensus is impossible in the presence of even a single unannounced crash failure."
+      - "**Partially Synchronous Models**: Practical systems circumvent FLP by introducing randomized timers or weak synchrony $\\Delta$ guarantees."
+      - "**State Machine Replication (SMR)**: All replicas execute identical sequences of deterministic transitions from an identical initial state $S_0$."
+      - "**Safety Over Liveness**: Distributed algorithms guarantee linearizability even during unbounded network partitions."
+    callout: "Consensus does not guarantee continuous availability during partitions; it guarantees strict non-divergence of committed logs."
+
+  - layout: "split-diagram"
+    category: "PROTOCOL MECHANICS"
+    title: "Raft: Quorum-Based Log Replication"
+    subtitle: "Normal operation flow and write replication under leader authority"
+    image: "assets/consensus-diagram.svg"
+    caption: "Figure 1: Leader appends entries to local log before dispatching AppendEntries RPCs."
+    bullets:
+      - "**Client Proposal**: Client issues mutation $v=42$ exclusively to the established leader of term $T$."
+      - "**AppendEntries RPC**: Leader appends proposal locally, then broadcasts parallel RPCs to all registered peers."
+      - "**Commit Threshold**: Once replicated across a majority quorum $\\lfloor N/2 \\rfloor + 1$, the entry is permanently committed."
+      - "**State Machine Apply**: Committed index advances; leader responds to client and signals followers on subsequent heartbeats."
+
+  - layout: "comparison"
+    category: "ARCHITECTURAL TRADE-OFFS"
+    title: "Comparative Analysis: Raft vs Multi-Paxos"
+    subtitle: "Deconstructing architectural simplicity versus operational throughput"
+    left_title: "Raft (Strong Leader Approach)"
+    left_bullets:
+      - "**Log Discrepancy Prevention**: Log entries only flow unidirectionally from Leader to Followers."
+      - "**Understandability Metric**: Formally designed to eliminate ambiguous dual-leader overlap states."
+      - "**Leader Bottleneck**: Single leader node processes 100% of write coordination and sequencing."
+    right_title: "Multi-Paxos (Decentralized Consensus)"
+    right_bullets:
+      - "**Flexible Roles**: Any replica can propose; phase-1 preparation can be amortized across instances."
+      - "**Complex Invariant Inversion**: Gap filling and out-of-order log hole resolution introduces edge cases."
+      - "**High Throughput Ceiling**: Accommodates multi-leader topologies (e.g. Egalitarian Paxos)."
+    conclusion: "Raft reduces operational bugs in production control planes (etcd, Consul), whereas Multi-Paxos variants excel in geo-replicated active-active databases (Spanner, CockroachDB)."
+
+  - layout: "stat-grid"
+    category: "EMPIRICAL BENCHMARKS"
+    title: "Empirical Performance Under Cluster Degradation"
+    stats:
+      - value: "14.2k"
+        unit: "ops/sec"
+        label: "Peak Write Throughput"
+        description: "3-node NVMe Raft cluster with fsync batching"
+      - value: "3.1"
+        unit: "ms"
+        label: "P99 Commit Latency"
+        description: "Local area gigabit network interconnect"
+      - value: "180"
+        unit: "ms"
+        label: "Leader Failover Time"
+        description: "Heartbeat interval 50ms, timeout 150-300ms"
+      - value: "0"
+        unit: "anomalies"
+        label: "Linearizability Violations"
+        description: "Jepsen partition injection suite verification"
+    summary: "**Empirical Finding**: Randomized follower election timeouts (150–300ms) prevent persistent split-vote livelocks with >99.7% statistical probability."
+
+  - layout: "code"
+    category: "IMPLEMENTATION"
+    title: "Leader Election Timeout State Transition"
+    language: "python"
+    code: |
+      def handle_election_timeout(self):
+          if self.state == NodeState.LEADER:
+              return
+          
+          self.current_term += 1
+          self.state = NodeState.CANDIDATE
+          self.voted_for = self.node_id
+          self.votes_received = {self.node_id}
+          self.reset_timer(random_election_timeout())
+
+          # Dispatch RequestVote RPC to all peers
+          for peer in self.peers:
+              self.send_request_vote(
+                  peer_id=peer,
+                  term=self.current_term,
+                  candidate_id=self.node_id,
+                  last_log_idx=self.log.last_index(),
+                  last_log_term=self.log.last_term()
+              )
+    bullets:
+      - "**Term Incrementation**: Transitioning to Candidate immediately advances monotonic clock `current_term`."
+      - "**Self-Voting Invariant**: Candidate casts its own vote before dispatching network requests."
+      - "**Log Up-to-Date Rule**: Peers reject `RequestVote` if candidate's log is less complete than recipient's."
