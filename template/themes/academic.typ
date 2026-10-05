@@ -49,8 +49,8 @@
   )
 
   set text(
-    font: ("Inter", "DejaVu Sans"),
-    size: 13pt,
+    font: ("Libertinus Serif", "New Computer Modern", "DejaVu Serif"),
+    size: 13.5pt,
     fill: color-text-dark
   )
   set par(leading: 0.55em)
