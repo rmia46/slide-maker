@@ -32,21 +32,40 @@ Designed for seamless **Human + Agentic AI** collaboration:
 
 ---
 
-## Theme System
+## Theme & Color Customization (Zero Source Code Editing)
 
-Set `meta.theme` in `slides.yaml`:
+An AI agent or human can change themes, select color palettes, or specify exact hex codes directly in `slides.yaml`:
+
+### 1. Built-in Academic Palettes
+```yaml
+meta:
+  theme: "academic"          # "academic" (default) | "minimal" | "modern"
+  palette: "crimson"         # "oxford" | "crimson" | "emerald" | "amber" | "slate" | "indigo"
+```
+
+| Palette | University / Aesthetic Focus | Primary Accent |
+| :--- | :--- | :--- |
+| **`oxford`** *(Default)* | Classic British collegiate navy | `#1e40af` (Oxford Blue) |
+| **`crimson`** | Ivy League / Harvard / Stanford | `#991b1b` (Crimson) |
+| **`emerald`** | Academic forest / Dartmouth | `#065f46` (Deep Emerald) |
+| **`amber`** | Warm academic ochre / Princeton | `#92400e` (Amber Gold) |
+| **`slate`** | Minimalist charcoal / Monochrome | `#334155` (Slate) |
+| **`indigo`** | Contemporary Cambridge | `#4338ca` (Deep Indigo) |
+
+### 2. Custom Hex Overrides & Fonts
+Specify custom brand colors or font families directly:
 
 ```yaml
 meta:
-  theme: "academic"   # "academic" (default) | "minimal" | "modern"
-  title: "Course / Presentation Title"
+  theme: "academic"
+  colors:
+    accent: "#8B0000"        # Bullets, category rules, stat numbers
+    primary: "#1A1A1A"       # Main headings and text
+    muted: "#555555"         # Subtitles and metadata
+    background: "#FAFAFA"    # Slide canvas color
+    border: "#E0E0E0"        # Subtle divider lines
+  font: "New Computer Modern" # "Libertinus Serif" | "New Computer Modern" | "DejaVu Serif"
 ```
-
-| Theme | Focus & Aesthetics |
-| :--- | :--- |
-| **`academic`** *(Default)* | Projector-optimized, large readable typography, space-efficient, no web cards or pill badges, pure academic hierarchy. |
-| **`minimal`** | Monochrome, high-contrast zinc palette, restrained rule dividers, elegant serif/sans mix. |
-| **`modern`** | Card-based layouts, pill category tags, subtle background tints and container borders. |
 
 ---
 

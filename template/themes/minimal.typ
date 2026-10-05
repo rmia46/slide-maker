@@ -8,10 +8,13 @@
 #let color-border = rgb("#e4e4e7")        // Zinc 200
 
 #let setup(meta: (:), body) = {
+  let colors = resolve-colors(meta, fallback-palette: "slate")
+  let fonts = resolve-font(meta, default-font: ("Libertinus Serif", "New Computer Modern", "DejaVu Serif"))
   let title = meta.at("title", default: "Presentation")
   set document(title: title)
   set page(
     paper: "presentation-16-9",
+    fill: colors.bg,
     margin: (x: 2.2cm, top: 2.2cm, bottom: 2.0cm),
     header-ascent: 35%,
     footer-descent: 35%,
@@ -21,29 +24,29 @@
         grid(
           columns: (1fr, auto),
           align: (left, right),
-          text(size: 9pt, fill: color-text-muted, tracking: 0.5pt, upper(meta.at("faculty", default: ""))),
-          text(size: 9pt, fill: color-text-muted, title)
+          text(size: 9pt, fill: colors.muted, tracking: 0.5pt, upper(meta.at("faculty", default: ""))),
+          text(size: 9pt, fill: colors.muted, title)
         )
         v(2pt)
-        line(length: 100%, stroke: 0.5pt + color-border)
+        line(length: 100%, stroke: 0.5pt + colors.border)
       }
     },
     footer: context {
       let page-num = counter(page).get().first()
       if page-num > 1 {
-        line(length: 100%, stroke: 0.5pt + color-border)
+        line(length: 100%, stroke: 0.5pt + colors.border)
         v(3pt)
-        align(right, text(size: 9pt, fill: color-text-muted)[#page-num])
+        align(right, text(size: 9pt, fill: colors.muted)[#page-num])
       }
     }
   )
 
   set text(
-    font: ("Inter", "DejaVu Sans"),
-    size: 16.5pt,
-    fill: color-text-dark,
-    spacing: 120%
+    font: fonts,
+    size: 13.5pt,
+    fill: colors.primary
   )
+  set par(leading: 0.55em)
 
   body
 }
