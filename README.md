@@ -5,6 +5,7 @@ An offline, lightning-fast presentation slide generator built on **Typst** and a
 Designed for seamless **Human + Agentic AI** collaboration:
 - **No web browser or headless Chromium**: Pure native binary compilation.
 - **Editable Intermediate Representation**: Content lives in `slides.yaml`. Anyone (human or AI) can edit text, swap diagrams, or tweak stats at any time without touching code.
+- **Copy-Paste Web LLM Prompt**: Use [`PROMPT.md`](PROMPT.md) to generate perfect `slides.yaml` files via DeepSeek, Gemini Web, ChatGPT, or Claude to save tokens.
 - **Agent Guide**: See [`AGENT_INSTRUCTIONS.md`](AGENT_INSTRUCTIONS.md) for full schema documentation, layout rules, and prompting protocols.
 - **Instant Compilation**: Compiles full decks to publication-grade vector PDFs in milliseconds.
 - **Authentic Academic Typography**: Set in classical `Libertinus Serif` with LaTeX-standard `New Computer Modern` math.

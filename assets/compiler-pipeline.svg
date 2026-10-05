@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow-lime" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#4d7c0f" />
+    </marker>
+    <marker id="arrow-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748b" />
+    </marker>
+  </defs>
+
+  <!-- Step 1: Source Code -->
+  <rect x="25" y="40" width="140" height="90" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="25" y="40" width="140" height="6" rx="3" fill="#64748b"/>
+  <text x="95" y="70" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">Source Stream</text>
+  <rect x="40" y="85" width="110" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="95" y="103" font-family="monospace" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">"3 + 4 * 5"</text>
+
+  <!-- Arrow 1 -> 2 -->
+  <path d="M 165 85 L 225 85" fill="none" stroke="#4d7c0f" stroke-width="2" marker-end="url(#arrow-lime)"/>
+  <text x="195" y="75" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#4d7c0f" text-anchor="middle">chars</text>
+
+  <!-- Step 2: Lexical Analyzer -->
+  <rect x="235" y="30" width="150" height="110" rx="8" fill="#f7fee7" stroke="#4d7c0f" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="235" y="30" width="150" height="6" rx="3" fill="#4d7c0f"/>
+  <text x="310" y="60" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#1e3a8a" text-anchor="middle">Lexer (Scanner)</text>
+  <text x="310" y="78" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#4d7c0f" text-anchor="middle">Type 3: Regular Grammar</text>
+  <rect x="250" y="92" width="120" height="32" rx="4" fill="#ecfccb" stroke="#bef264" stroke-width="1"/>
+  <text x="310" y="112" font-family="monospace" font-size="9.5" font-weight="600" fill="#365314" text-anchor="middle">[3] [+] [4] [*] [5]</text>
+
+  <!-- Arrow 2 -> 3 -->
+  <path d="M 385 85 L 445 85" fill="none" stroke="#4d7c0f" stroke-width="2" marker-end="url(#arrow-lime)"/>
+  <text x="415" y="75" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#4d7c0f" text-anchor="middle">tokens</text>
+
+  <!-- Step 3: Parser (CFG) -->
+  <rect x="455" y="30" width="125" height="110" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="455" y="30" width="125" height="6" rx="3" fill="#4d7c0f"/>
+  <text x="517" y="60" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#0f172a" text-anchor="middle">Parser</text>
+  <text x="517" y="78" font-family="Inter, sans-serif" font-size="9.5" font-weight="600" fill="#4d7c0f" text-anchor="middle">Type 2: CFG (BNF)</text>
+  <text x="517" y="102" font-family="Inter, sans-serif" font-size="9.5" fill="#64748b" text-anchor="middle">Verifies Syntax</text>
+  <text x="517" y="118" font-family="Inter, sans-serif" font-size="9.5" fill="#64748b" text-anchor="middle">&amp; Builds Tree</text>
+
+  <!-- Arrow Down to AST -->
+  <path d="M 517 140 L 517 195" fill="none" stroke="#4d7c0f" stroke-width="2" marker-end="url(#arrow-lime)"/>
+  <text x="555" y="172" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#4d7c0f">produces</text>
+
+  <!-- Bottom Panel: Parse Tree & Evaluator -->
+  <rect x="25" y="200" width="555" height="140" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="25" y="200" width="555" height="6" rx="3" fill="#65a30d"/>
+  
+  <text x="45" y="230" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#0f172a">Parse Tree Hierarchy &amp; Execution</text>
+  
+  <!-- Mini tree nodes -->
+  <!-- Expr (+) -->
+  <circle cx="210" cy="245" r="14" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="210" y="250" font-family="monospace" font-size="13" font-weight="700" fill="#365314" text-anchor="middle">+</text>
+
+  <!-- Left: 3 -->
+  <line x1="200" y1="256" x2="165" y2="285" stroke="#64748b" stroke-width="1.5"/>
+  <circle cx="160" cy="295" r="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="160" y="300" font-family="monospace" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">3</text>
+
+  <!-- Right: (*) -->
+  <line x1="220" y1="256" x2="255" y2="285" stroke="#4d7c0f" stroke-width="1.5"/>
+  <circle cx="260" cy="295" r="14" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="260" y="300" font-family="monospace" font-size="13" font-weight="700" fill="#365314" text-anchor="middle">*</text>
+
+  <!-- Sub-nodes: 4 and 5 -->
+  <line x1="250" y1="305" x2="225" y2="322" stroke="#64748b" stroke-width="1.5"/>
+  <circle cx="220" cy="326" r="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="220" y="330" font-family="monospace" font-size="10" font-weight="700" fill="#0f172a" text-anchor="middle">4</text>
+
+  <line x1="270" y1="305" x2="295" y2="322" stroke="#64748b" stroke-width="1.5"/>
+  <circle cx="300" cy="326" r="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="300" y="330" font-family="monospace" font-size="10" font-weight="700" fill="#0f172a" text-anchor="middle">5</text>
+
+  <!-- Evaluation Arrow & Outcome -->
+  <path d="M 330 270 L 400 270" fill="none" stroke="#4d7c0f" stroke-width="2" marker-end="url(#arrow-lime)"/>
+  <text x="365" y="260" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#4d7c0f" text-anchor="middle">evaluate</text>
+
+  <rect x="415" y="242" width="145" height="56" rx="6" fill="#f7fee7" stroke="#bef264" stroke-width="1.5"/>
+  <text x="487" y="264" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#4d7c0f" text-anchor="middle">Evaluation Result</text>
+  <text x="487" y="287" font-family="monospace" font-size="18" font-weight="800" fill="#1e3a8a" text-anchor="middle">3 + 20 = 23</text>
+</svg>

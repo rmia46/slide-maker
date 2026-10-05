@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 370" width="100%" height="100%">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <!-- Container Box -->
+  <rect x="20" y="15" width="560" height="340" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="20" y="15" width="560" height="6" rx="3" fill="#65a30d"/>
+
+  <!-- Legend -->
+  <rect x="40" y="32" width="16" height="16" rx="4" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="64" y="45" font-family="Inter, sans-serif" font-size="10.5" font-weight="600" fill="#0f172a">Non-Terminal (Variables)</text>
+
+  <rect x="220" y="32" width="16" height="16" rx="8" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="244" y="45" font-family="Inter, sans-serif" font-size="10.5" font-weight="600" fill="#0f172a">Terminal (Tokens/Leaves)</text>
+
+  <line x1="40" y1="60" x2="560" y2="60" stroke="#f1f5f9" stroke-width="1"/>
+
+  <!-- Tree Structure: Expr -> Expr + Term -->
+  <!-- Level 0: Root Expr -->
+  <rect x="260" y="75" width="80" height="30" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="2"/>
+  <text x="300" y="95" font-family="monospace" font-size="13" font-weight="700" fill="#365314" text-anchor="middle">&lt;Expr&gt;</text>
+
+  <!-- Lines from Root to Children -->
+  <line x1="280" y1="105" x2="160" y2="135" stroke="#4d7c0f" stroke-width="1.5"/>
+  <line x1="300" y1="105" x2="300" y2="135" stroke="#64748b" stroke-width="1.5"/>
+  <line x1="320" y1="105" x2="430" y2="135" stroke="#4d7c0f" stroke-width="1.5"/>
+
+  <!-- Level 1: Left <Expr>, Middle '+', Right <Term> -->
+  <rect x="120" y="135" width="80" height="30" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="160" y="155" font-family="monospace" font-size="12" font-weight="700" fill="#365314" text-anchor="middle">&lt;Expr&gt;</text>
+
+  <circle cx="300" cy="150" r="14" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="300" y="155" font-family="monospace" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">+</text>
+
+  <rect x="390" y="135" width="80" height="30" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="430" y="155" font-family="monospace" font-size="12" font-weight="700" fill="#365314" text-anchor="middle">&lt;Term&gt;</text>
+
+  <!-- Left subtree: <Expr> -> <Term> -> <Factor> -> '3' -->
+  <line x1="160" y1="165" x2="160" y2="195" stroke="#4d7c0f" stroke-width="1.5"/>
+  <rect x="120" y="195" width="80" height="28" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="160" y="214" font-family="monospace" font-size="11.5" font-weight="700" fill="#365314" text-anchor="middle">&lt;Term&gt;</text>
+
+  <line x1="160" y1="223" x2="160" y2="250" stroke="#4d7c0f" stroke-width="1.5"/>
+  <rect x="120" y="250" width="80" height="28" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="160" y="269" font-family="monospace" font-size="11" font-weight="700" fill="#365314" text-anchor="middle">&lt;Factor&gt;</text>
+
+  <line x1="160" y1="278" x2="160" y2="305" stroke="#64748b" stroke-width="1.5"/>
+  <circle cx="160" cy="318" r="14" fill="#f7fee7" stroke="#4d7c0f" stroke-width="2"/>
+  <text x="160" y="323" font-family="monospace" font-size="13" font-weight="800" fill="#365314" text-anchor="middle">3</text>
+
+  <!-- Right subtree: <Term> -> <Term> '*' <Factor> -->
+  <line x1="410" y1="165" x2="350" y2="195" stroke="#4d7c0f" stroke-width="1.5"/>
+  <line x1="430" y1="165" x2="430" y2="195" stroke="#64748b" stroke-width="1.5"/>
+  <line x1="450" y1="165" x2="500" y2="195" stroke="#4d7c0f" stroke-width="1.5"/>
+
+  <!-- Sub-term, Sub-* , Sub-factor -->
+  <rect x="310" y="195" width="80" height="28" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="350" y="214" font-family="monospace" font-size="11.5" font-weight="700" fill="#365314" text-anchor="middle">&lt;Term&gt;</text>
+
+  <circle cx="430" cy="209" r="14" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="430" y="214" font-family="monospace" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">*</text>
+
+  <rect x="460" y="195" width="80" height="28" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="500" y="214" font-family="monospace" font-size="11" font-weight="700" fill="#365314" text-anchor="middle">&lt;Factor&gt;</text>
+
+  <!-- Term -> Factor -> 4 -->
+  <line x1="350" y1="223" x2="350" y2="250" stroke="#4d7c0f" stroke-width="1.5"/>
+  <rect x="310" y="250" width="80" height="28" rx="6" fill="#ecfccb" stroke="#4d7c0f" stroke-width="1.5"/>
+  <text x="350" y="269" font-family="monospace" font-size="11" font-weight="700" fill="#365314" text-anchor="middle">&lt;Factor&gt;</text>
+
+  <line x1="350" y1="278" x2="350" y2="305" stroke="#64748b" stroke-width="1.5"/>
+  <circle cx="350" cy="318" r="14" fill="#f7fee7" stroke="#4d7c0f" stroke-width="2"/>
+  <text x="350" y="323" font-family="monospace" font-size="13" font-weight="800" fill="#365314" text-anchor="middle">4</text>
+
+  <!-- Factor -> 5 -->
+  <line x1="500" y1="223" x2="500" y2="305" stroke="#64748b" stroke-width="1.5"/>
+  <circle cx="500" cy="318" r="14" fill="#f7fee7" stroke="#4d7c0f" stroke-width="2"/>
+  <text x="500" y="323" font-family="monospace" font-size="13" font-weight="800" fill="#365314" text-anchor="middle">5</text>
+</svg>

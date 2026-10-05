@@ -1,104 +1,248 @@
 meta:
   theme: "academic"
-  title: "CS 739: Distributed Systems Architecture"
-  faculty: "Department of Computer Sciences"
-  presenter: "Prof. Alan Kay"
-  date: "Fall Semester 2026"
+  colors:
+    accent: "#4d7c0f"        # Academic Lime Green (deep readable lime)
+    primary: "#0f172a"       # Slate 900
+    muted: "#475569"         # Slate 600
+    background: "#ffffff"    # Clean canvas
+    border: "#bef264"        # Lime-300 divider lines
+  font: "Libertinus Serif"
+  title: "Formal Grammars & Language Syntax"
+  faculty: "Concepts of Programming Languages • Computer Science"
+  presenter: "Theory to Practical Systems"
+  date: "Spring 2026"
 
 slides:
+  # Slide 1: Title Slide
   - layout: "title"
-    title: "Consensus Protocols in Distributed Storage"
-    subtitle: "Formal Mechanisms of Raft, Multi-Paxos, and Viewstamped Replication"
-    faculty: "Department of Computer Sciences • Systems Group"
-    presenter: "Prof. Alan Kay"
-    date: "Lecture 08 • Fall 2026"
+    title: "Formal Grammars & Language Syntax"
+    subtitle: "From Mathematical Foundations to a Working Recursive Descent C Parser"
+    faculty: "Concepts of Programming Languages • Computer Science"
+    presenter: "Theory to Implementation Series"
+    date: "Spring 2026"
 
+  # Slide 2: Analogy & Intuition
   - layout: "content"
-    category: "FOUNDATIONS"
-    title: "The Consensus Problem: Formal Bounds"
-    subtitle: "State Machine Replication under Asynchronous Network Assumptions"
+    category: "INTUITION & ANALOGY"
+    title: "What is a Formal Grammar?"
+    subtitle: "Bridging Natural Language Intuition to Programming Syntax"
     bullets:
-      - "**FLP Impossibility Result**: Deterministic asynchronous consensus is impossible in the presence of even a single unannounced crash failure."
-      - "**Partially Synchronous Models**: Practical systems circumvent FLP by introducing randomized timers or weak synchrony $\\Delta$ guarantees."
-      - "**State Machine Replication (SMR)**: All replicas execute identical sequences of deterministic transitions from an identical initial state $S_0$."
-      - "**Safety Over Liveness**: Distributed algorithms guarantee linearizability even during unbounded network partitions."
-    callout: "Consensus does not guarantee continuous availability during partitions; it guarantees strict non-divergence of committed logs."
+      - "**Natural Language Analogy**: English defines sentences as `Subject + Verb + Object` (*'The compiler generates code'* vs invalid *'Compiler code generates the'*)."
+      - "**Syntax vs Semantics**: Syntax specifies structural legality; semantics specifies runtime meaning. Chomsky's sentence *'Colorless green ideas sleep furiously'* is syntactically flawless but semantically meaningless."
+      - "**The Compiler's Blueprint**: A formal grammar provides the mathematical specification that determines every valid string in a language."
+      - "**Mechanical Verification**: Rather than writing millions of ad-hoc string checks, compilers rely on formal grammars to systematically validate source code."
+    callout: "Syntax is the shape of code; formal grammar is the mathematical blueprint that guarantees that shape."
 
-  - layout: "split-diagram"
-    category: "PROTOCOL MECHANICS"
-    title: "Raft: Quorum-Based Log Replication"
-    subtitle: "Normal operation flow and write replication under leader authority"
-    image: "assets/consensus-diagram.svg"
-    caption: "Figure 1: Leader appends entries to local log before dispatching AppendEntries RPCs."
+  # Slide 3: Formal Mathematical Definition
+  - layout: "content"
+    category: "MATHEMATICAL FOUNDATION"
+    title: "The 4-Tuple: Formal Grammar Definition"
+    subtitle: "A Generative Mathematical Device Defined as G = (V_N, V_T, P, S)"
     bullets:
-      - "**Client Proposal**: Client issues mutation $v=42$ exclusively to the established leader of term $T$."
-      - "**AppendEntries RPC**: Leader appends proposal locally, then broadcasts parallel RPCs to all registered peers."
-      - "**Commit Threshold**: Once replicated across a majority quorum $\\lfloor N/2 \\rfloor + 1$, the entry is permanently committed."
-      - "**State Machine Apply**: Committed index advances; leader responds to client and signals followers on subsequent heartbeats."
+      - "**Non-Terminals ($V_N$)**: Syntactic variables (placeholders) expanded during derivation (e.g., `Expr`, `Term`, `Factor`)."
+      - "**Terminals ($V_T$)**: The alphabet of literal tokens that appear in source code (e.g., `+`, `*`, `(`, `)`, integer constants)."
+      - "**Production Rules ($P$)**: Rewrite rules of the form $A -> alpha$, specifying how variables expand into strings in $(V_N union V_T)^*.$"
+      - "**Start Symbol ($S$)**: The distinguished root non-terminal from which all valid sentences originate ($S in V_N$)."
+    callout: "A language $L(G)$ is the set of all terminal strings that can be derived starting from $S$ using rules in $P$."
 
+  # Slide 4: Chomsky Hierarchy Comparison
   - layout: "comparison"
-    category: "ARCHITECTURAL TRADE-OFFS"
-    title: "Comparative Analysis: Raft vs Multi-Paxos"
-    subtitle: "Deconstructing architectural simplicity versus operational throughput"
-    left_title: "Raft (Strong Leader Approach)"
+    category: "THEORETICAL CLASSIFICATION"
+    title: "The Chomsky Hierarchy of Grammars"
+    subtitle: "Selecting the Right Theoretical Model for Programming Language Syntax"
+    left_title: "Type 3: Regular Grammars"
     left_bullets:
-      - "**Log Discrepancy Prevention**: Log entries only flow unidirectionally from Leader to Followers."
-      - "**Understandability Metric**: Formally designed to eliminate ambiguous dual-leader overlap states."
-      - "**Leader Bottleneck**: Single leader node processes 100% of write coordination and sequencing."
-    right_title: "Multi-Paxos (Decentralized Consensus)"
+      - "**Rule Format**: $A -> a B$ or $A -> a$ (Strictly linear transitions)."
+      - "**Recognition Model**: Deterministic Finite Automata (DFA, zero memory)."
+      - "**Role in Compilers**: Lexical analysis (tokenizing numbers, keywords)."
+      - "**Fundamental Limit**: Cannot match arbitrary nested brackets $a^n b^n$."
+    right_title: "Type 2: Context-Free Grammars"
     right_bullets:
-      - "**Flexible Roles**: Any replica can propose; phase-1 preparation can be amortized across instances."
-      - "**Complex Invariant Inversion**: Gap filling and out-of-order log hole resolution introduces edge cases."
-      - "**High Throughput Ceiling**: Accommodates multi-leader topologies (e.g. Egalitarian Paxos)."
-    conclusion: "Raft reduces operational bugs in production control planes (etcd, Consul), whereas Multi-Paxos variants excel in geo-replicated active-active databases (Spanner, CockroachDB)."
+      - "**Rule Format**: $A -> gamma$ where $gamma in (V_N union V_T)^*.$"
+      - "**Recognition Model**: Pushdown Automata (Stack memory)."
+      - "**Role in Compilers**: Syntax analysis (building parse trees and ASTs)."
+      - "**Key Capability**: Naturally expresses nested blocks, expressions, and recursion."
+    conclusion: "Modern compilers pair Regular Grammars (Type 3) for high-speed tokenization with Context-Free Grammars (Type 2) for hierarchical program structure."
 
-  - layout: "stat-grid"
-    category: "EMPIRICAL BENCHMARKS"
-    title: "Empirical Performance Under Cluster Degradation"
-    stats:
-      - value: "14.2k"
-        unit: "ops/sec"
-        label: "Peak Write Throughput"
-        description: "3-node NVMe Raft cluster with fsync batching"
-      - value: "3.1"
-        unit: "ms"
-        label: "P99 Commit Latency"
-        description: "Local area gigabit network interconnect"
-      - value: "180"
-        unit: "ms"
-        label: "Leader Failover Time"
-        description: "Heartbeat interval 50ms, timeout 150-300ms"
-      - value: "0"
-        unit: "anomalies"
-        label: "Linearizability Violations"
-        description: "Jepsen partition injection suite verification"
-    summary: "**Empirical Finding**: Randomized follower election timeouts (150–300ms) prevent persistent split-vote livelocks with >99.7% statistical probability."
-
-  - layout: "code"
-    category: "IMPLEMENTATION"
-    title: "Leader Election Timeout State Transition"
-    language: "python"
-    code: |
-      def handle_election_timeout(self):
-          if self.state == NodeState.LEADER:
-              return
-          
-          self.current_term += 1
-          self.state = NodeState.CANDIDATE
-          self.voted_for = self.node_id
-          self.votes_received = {self.node_id}
-          self.reset_timer(random_election_timeout())
-
-          # Dispatch RequestVote RPC to all peers
-          for peer in self.peers:
-              self.send_request_vote(
-                  peer_id=peer,
-                  term=self.current_term,
-                  candidate_id=self.node_id,
-                  last_log_idx=self.log.last_index(),
-                  last_log_term=self.log.last_term()
-              )
+  # Slide 5: BNF & EBNF Notation
+  - layout: "content"
+    category: "SYNTAX SPECIFICATION"
+    title: "Backus-Naur Form (BNF) & Extended BNF"
+    subtitle: "The Universal Metalanguage for Defining Programming Languages"
     bullets:
-      - "**Term Incrementation**: Transitioning to Candidate immediately advances monotonic clock `current_term`."
-      - "**Self-Voting Invariant**: Candidate casts its own vote before dispatching network requests."
-      - "**Log Up-to-Date Rule**: Peers reject `RequestVote` if candidate's log is less complete than recipient's."
+      - "**Classical BNF**: Introduced for ALGOL 60; uses `::=` for production and `|` for alternatives (`<Expr> ::= <Expr> + <Term> | <Term>`)."
+      - "**EBNF Repetition `{ ... }`**: Denotes zero or more repetitions, eliminating awkward recursive rules (`Expr ::= Term { ('+' | '-') Term }`)."
+      - "**EBNF Optionality `[ ... ]`**: Denotes optional components (e.g., `ReturnStmt ::= 'return' [ Expr ] ';'`)."
+      - "**EBNF Grouping `( ... )`**: Enforces local precedence without polluting the grammar with intermediate variable names."
+    callout: "EBNF transforms recursive grammar definitions into concise, iterative loops when writing parsers."
+
+  # Slide 6: Parse Trees & Derivations
+  - layout: "split-diagram"
+    category: "STRUCTURAL REPRESENTATION"
+    title: "Derivations and Concrete Parse Trees"
+    subtitle: "Visualizing Hierarchical Precedence for Expression '3 + 4 * 5'"
+    image: "assets/parse-tree.svg"
+    caption: "Figure 1: Concrete Parse Tree: Multiplication sits deeper in the tree, giving it higher precedence."
+    image_position: "right"
+    bullets:
+      - "**Derivation**: Step-by-step string substitution starting at root `<Expr>`."
+      - "**Leftmost Derivation**: Replaces the leftmost non-terminal at every step until only terminals remain."
+      - "**Tree Anatomy**: Root is start symbol `<Expr>`, interior nodes are non-terminals, and leaves are tokens."
+      - "**Precedence via Depth**: Nodes lower in the tree evaluate earlier than nodes near the root."
+
+  # Slide 7: Ambiguity & Resolution
+  - layout: "comparison"
+    category: "GRAMMAR ENGINEERING"
+    title: "Grammar Ambiguity & Precedence Stratification"
+    subtitle: "Guaranteeing Deterministic, Unique Parse Trees for Every Input"
+    left_title: "Ambiguous Grammar (Broken)"
+    left_bullets:
+      - "**Flawed Rule**: $E -> E + E$ or $E -> E times E$ or `num`."
+      - "**Multiple Interpretations**: Input `3 + 4 * 5` yields two distinct trees ($23$ or $35$)."
+      - "**Dangling Else**: Ambiguity in nested `if (a) if (b) s1 else s2`."
+      - "**Compiler Failure**: Compilers cannot tolerate non-deterministic code behavior."
+    right_title: "Stratified Grammar (Correct)"
+    right_bullets:
+      - "**Precedence Tiers**: Split rules into tiers: `Expr` -> `Term` -> `Factor`."
+      - "**Binding Tightness**: Factor handles numbers/parens; Term handles `*`, `/`; Expr handles `+`, `-`."
+      - "**Associativity Rule**: Left-recursive productions enforce standard left-to-right evaluation."
+      - "**Unambiguous Guarantee**: Guarantees exactly one valid parse tree per program."
+    conclusion: "Stratifying a grammar into distinct precedence layers mathematically eliminates ambiguity without changing the language."
+
+  # Slide 8: Compiler Architecture Pipeline
+  - layout: "split-diagram"
+    category: "SYSTEMS ARCHITECTURE"
+    title: "The Syntax Analysis Architecture"
+    subtitle: "From Continuous Character Stream to Executable Evaluation"
+    image: "assets/compiler-pipeline.svg"
+    caption: "Figure 2: Compiler front-end pipeline separating tokenization from grammar analysis."
+    image_position: "left"
+    bullets:
+      - "**Lexer (Scanner)**: Uses regular patterns to group raw characters into categorized tokens (`[NUM, PLUS, NUM]`)."
+      - "**Parser**: Validates token sequences against CFG rules and organizes them into a hierarchical tree."
+      - "**The Algorithmic Bridge**: In a Recursive Descent Parser, each non-terminal rule maps to a single C function."
+      - "**Direct Evaluation**: An interpreter evaluates values on-the-fly directly inside parsing functions."
+
+  # Slide 9: Mini Project in C - Lexer
+  - layout: "code"
+    category: "MINI PROJECT IN C"
+    title: "Part 1: The Scanner & Whitespace Stripper"
+    language: "c"
+    code: |
+      #include <stdio.h>
+      #include <ctype.h>
+
+      const char *src;
+
+      void skip_whitespace() {
+          while (*src && isspace(*src)) src++;
+      }
+
+      // Consumes and returns next integer constant
+      int parse_factor();
+      int parse_term();
+      int parse_expr();
+    bullets:
+      - "**Stream Pointer**: Global `src` pointer tracks current character position."
+      - "**Lexical Phase**: `skip_whitespace()` strips blanks, newlines, and tabs between tokens."
+      - "**Forward Declarations**: Mutually recursive grammar rules require C function prototypes."
+
+  # Slide 10: Mini Project in C - Parser
+  - layout: "code"
+    category: "MINI PROJECT IN C"
+    title: "Part 2: Recursive Descent Parsing Functions"
+    language: "c"
+    code: |
+      int parse_factor() {
+          skip_whitespace();
+          if (*src == '(') {
+              src++; // consume '('
+              int val = parse_expr();
+              if (*src == ')') src++; // consume ')'
+              return val;
+          }
+          int val = 0;
+          while (*src && isdigit(*src))
+              val = val * 10 + (*src++ - '0');
+          return val;
+      }
+
+      int parse_term() {
+          int val = parse_factor();
+          while (1) {
+              skip_whitespace();
+              if (*src == '*') { src++; val *= parse_factor(); }
+              else if (*src == '/') { src++; val /= parse_factor(); }
+              else break;
+          }
+          return val;
+      }
+    bullets:
+      - "**Factor Rule**: Handles base numbers and nested sub-expressions inside `( ... )`."
+      - "**Term Rule**: Implements `Term -> Factor { ('*' | '/') Factor }` with higher precedence."
+      - "**Direct Evaluation**: Values are calculated immediately as the syntax is recognized."
+
+  # Slide 11: Mini Project in C - Expr & Main
+  - layout: "code"
+    category: "MINI PROJECT IN C"
+    title: "Part 3: Top-Level Expression & Test Suite"
+    language: "c"
+    code: |
+      int parse_expr() {
+          int val = parse_term();
+          while (1) {
+              skip_whitespace();
+              if (*src == '+') { src++; val += parse_term(); }
+              else if (*src == '-') { src++; val -= parse_term(); }
+              else break;
+          }
+          return val;
+      }
+
+      int main() {
+          src = "3 + 4 * 5";
+          printf("Result: %d\n", parse_expr()); // Output: 23
+
+          src = "(3 + 4) * 5";
+          printf("Result: %d\n", parse_expr()); // Output: 35
+          return 0;
+      }
+    bullets:
+      - "**Expr Rule**: Implements `Expr -> Term { ('+' | '-') Term }` at lowest precedence level."
+      - "**Correct Precedence**: `3 + 4 * 5` outputs `23` because `parse_term` executes first."
+      - "**Parentheses Override**: `(3 + 4) * 5` outputs `35` via recursive call to `parse_expr`."
+
+  # Slide 12: Empirical Metrics & Verification
+  - layout: "stat-grid"
+    category: "PROJECT VERIFICATION"
+    title: "Mini Project Metrics & Complexity Analysis"
+    stats:
+      - value: "100%"
+        unit: "accuracy"
+        label: "Precedence Precision"
+        description: "Evaluates '3 + 4 * 5' -> 23 and '(3 + 4) * 5' -> 35"
+      - value: "68"
+        unit: "lines"
+        label: "Total C Source Footprint"
+        description: "Self-contained C99 with zero external dependencies"
+      - value: "O(N)"
+        unit: "time"
+        label: "Linear Parsing Complexity"
+        description: "Single-pass LL(1) parsing without backtracking"
+      - value: "0"
+        unit: "allocations"
+        label: "Dynamic Memory Overhead"
+        description: "Zero malloc calls; utilizes execution call stack"
+    summary: "**Core Finding**: Translating an EBNF grammar directly into recursive descent functions achieves optimal $O(N)$ execution with zero memory overhead."
+
+  # Slide 13: Summary & Key Takeaways
+  - layout: "content"
+    category: "SYNTHESIS & TAKEAWAYS"
+    title: "From Formal Grammar to Production Compilers"
+    subtitle: "How Foundations in Theory Enable Industrial-Scale Software Engineering"
+    bullets:
+      - "**Mathematical Rigor**: Formal grammars eliminate guesswork by defining syntax as a provable mathematical set of strings."
+      - "**Chomsky Hierarchy in Practice**: Real compilers divide tasks: regular grammars for scanning tokens, context-free grammars for parsing syntax."
+      - "**Parser Generators vs Hand-Written**: While tools like Flex/Bison generate parsers automatically, modern compilers (GCC, Clang, Rustc) favor hand-crafted recursive descent for superior error reporting."
+      - "**Your Accomplishment**: You now understand the full continuum from formal 4-tuple grammar definitions to a functioning C interpreter."
+    callout: "Grammars are not just theoretical constructs; they are the architectural blueprint of every programming language in existence."
