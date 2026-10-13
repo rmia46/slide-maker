@@ -22,13 +22,22 @@ cd slide-maker
 ### 2. Core Compiler (Required for PDF & Images)
 The compiler requires only the standalone **Typst** binary:
 
-- **Arch Linux**: `pacman -S typst`
-- **macOS**: `brew install typst`
-- **Linux (Binary)**:
+- **Arch Linux**: `sudo pacman -S typst`
+- **Fedora**: `sudo dnf install typst`
+- **Ubuntu / Debian**:
   ```bash
-  curl -fsSL https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ
-  mv typst-*/typst ~/.local/bin/
+  # Via Cargo:
+  cargo install --locked typst-cli
+  # Or via Snap:
+  sudo snap install typst
   ```
+- **macOS**: `brew install typst`
+
+**OR** install the official pre-compiled standalone binary (any Linux distro):
+```bash
+curl -fsSL https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ
+mv typst-*/typst ~/.local/bin/
+```
 
 ### 3. Optional: Python Environment (For PPTX Export)
 Building PDF slides requires no Python packages. To export editable PowerPoint decks (`./slide-maker export-pptx`) or enable deep YAML schema validation:
