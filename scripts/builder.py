@@ -53,7 +53,17 @@ def extract_yaml_from_text(raw_text: str) -> str:
     return text
 
 def validate_yaml_content(yaml_str: str):
-    """Validate YAML syntax and slide schema, returning (is_valid, parsed_data, errors, warnings)."""
+    """Validate YAML syntax and slide schema using compiler-grade diagnostics."""
+    try:
+        from checker import validate_yaml_string
+        is_valid, diags = validate_yaml_string(yaml_str, ROOT_DIR, filename="pasted_input")
+        lines = yaml_str.splitlines()
+        errors = [d.format(lines) for d in diags if d.severity == "error"]
+        warnings = [d.format(lines) for d in diags if d.severity == "warning"]
+        return is_valid, None, errors, warnings
+    except ImportError:
+        pass
+
     errors = []
     warnings = []
     data = None
@@ -85,33 +95,6 @@ def validate_yaml_content(yaml_str: str):
     if "slides" not in data or not isinstance(data["slides"], list):
         errors.append("Missing or invalid 'slides': Expected a list of slide objects under 'slides:'.")
         return False, data, errors, warnings
-
-    valid_layouts = {
-        "title", "content", "split-diagram", "split-image", 
-        "comparison", "stat-grid", "code", "diagram", "image"
-    }
-
-    # Inspect each slide
-    for idx, slide in enumerate(data.get("slides", []), start=1):
-        if not isinstance(slide, dict):
-            errors.append(f"Slide #{idx} is not a valid dictionary object.")
-            continue
-        
-        layout = slide.get("layout", slide.get("type", "content"))
-        if layout not in valid_layouts:
-            warnings.append(f"Slide #{idx} uses unrecognized layout '{layout}'. Supported: {', '.join(sorted(valid_layouts))}")
-
-        # Check for asset paths
-        img_path = slide.get("image")
-        if img_path:
-            full_img = ROOT_DIR / img_path
-            if not full_img.exists():
-                warnings.append(f"Slide #{idx} ('{slide.get('title', 'Untitled')}'): Referenced asset not found: '{img_path}'")
-
-        # Check bullet density
-        bullets = slide.get("bullets", [])
-        if isinstance(bullets, list) and len(bullets) > 5:
-            warnings.append(f"Slide #{idx} ('{slide.get('title', 'Untitled')}'): Has {len(bullets)} bullets (max recommended is 4-5 to avoid vertical overflow).")
 
     return (len(errors) == 0), data, errors, warnings
 

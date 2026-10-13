@@ -41,18 +41,11 @@ case "$COMMAND" in
 
   check)
     shift || true
-    python3 -c "
-import sys, yaml
-from pathlib import Path
-try:
-    data = yaml.safe_load(Path('slides.yaml').read_text())
-    print('✓ slides.yaml syntax is valid.')
-    print(f'  • Title: {data.get(\"meta\", {}).get(\"title\", \"Untitled\")}')
-    print(f'  • Total Slides: {len(data.get(\"slides\", []))}')
-except Exception as e:
-    print(f'✗ Validation error in slides.yaml:\n{e}', file=sys.stderr)
-    sys.exit(1)
-"
+    PYTHON_CMD="python3"
+    if [ -f "$SCRIPT_DIR/.venv/bin/python" ]; then
+      PYTHON_CMD="$SCRIPT_DIR/.venv/bin/python"
+    fi
+    $PYTHON_CMD "$SCRIPT_DIR/scripts/checker.py" "${1:-slides.yaml}"
     ;;
 
   watch)
