@@ -12,6 +12,34 @@ Designed for seamless **Human + Agentic AI** collaboration:
 
 ---
 
+## Prerequisites & Installation
+
+### 1. Core Dependency (Required for PDF & Images)
+The core compiler requires only the standalone **Typst** binary:
+
+- **Arch Linux**: `pacman -S typst`
+- **macOS (Homebrew)**: `brew install typst`
+- **Linux / Standalone Binary**:
+  ```bash
+  curl -fsSL https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ
+  mv typst-*/typst ~/.local/bin/
+  ```
+
+### 2. Optional: Python Environment (For PPTX Export & Deep Validation)
+Standard PDF building runs without any Python packages. For editable PowerPoint export (`./slide-maker export-pptx`) or enhanced YAML syntax diagnostics:
+
+```bash
+# Using uv (fastest):
+uv venv .venv && uv pip install -r requirements.txt
+
+# Or using standard python3 venv:
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+```
+
+> **Note**: `./slide-maker` automatically detects and uses `.venv/` if present. If you have SVG diagrams in your slides, install `librsvg` (`rsvg-convert`) or `inkscape` so PPTX export can auto-rasterize them into the deck.
+
+---
+
 ## Quickstart
 
 ### 1. Instant Paste & Build (Zero-Edit Workflow)
