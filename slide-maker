@@ -80,6 +80,14 @@ case "$COMMAND" in
     $PYTHON_CMD "$SCRIPT_DIR/scripts/export_pptx.py" "$OUT_FILE"
     ;;
 
+  test)
+    PYTHON_CMD="python3"
+    if [ -f "$SCRIPT_DIR/.venv/bin/python" ]; then
+      PYTHON_CMD="$SCRIPT_DIR/.venv/bin/python"
+    fi
+    $PYTHON_CMD "$SCRIPT_DIR/scripts/test_system.py"
+    ;;
+
   help|--help|-h)
     echo "Usage: ./slide-maker [command]"
     echo ""
@@ -87,6 +95,7 @@ case "$COMMAND" in
     echo "  paste [--clipboard|-c]   Paste YAML/LLM output directly to auto-validate & build"
     echo "  build                    Compile slides.yaml to slides.pdf (default)"
     echo "  check                    Validate syntax and structure of slides.yaml"
+    echo "  test                     Run full test suite (syntax, types, PDF, PNG, PPTX)"
     echo "  watch                    Auto-recompile on every edit to slides.yaml"
     echo "  export-images [dir]      Render each slide as PNG (default: dist/slides/)"
     echo "  export-pptx [file.pptx]  Export to native editable PowerPoint deck (default: slides.pptx)"
