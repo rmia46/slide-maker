@@ -1,97 +1,89 @@
 # slide-maker
 
-An offline, high-speed presentation slide generator built with **Typst** and an editable **YAML** intermediate representation.
+An offline, high-speed presentation generator built with **Typst** and an editable **YAML** intermediate representation.
 
-Designed for seamless **Human + Agentic AI** collaboration:
-- **Zero Web Dependencies**: Compiles directly via native binary; no Node.js, headless Chromium, or browser servers.
-- **Zero-Edit Terminal Workflow**: Paste LLM output into the terminal or build directly from your clipboard with `./slide-maker paste`.
-- **Instant Compilation**: Renders 40+ vector slides to sharp PDF in ~1.5 seconds.
-- **Authentic Academic Typography**: Classical serif typesetting (`Libertinus Serif`) paired with Knuth's LaTeX-grade math (`New Computer Modern`).
-- **Token-Saving Prompt Template**: Copy [`PROMPT.md`](PROMPT.md) into online web LLMs (DeepSeek, Gemini, Claude, ChatGPT) to generate ready-to-build decks for free.
-- **Autonomous Agent Guide**: Dedicated specification in [`AGENT_INSTRUCTIONS.md`](AGENT_INSTRUCTIONS.md).
+Designed for seamless **Human + AI** workflow:
+- **Zero Web Dependencies**: Compiles directly to vector PDF via native binary in ~1.5 seconds.
+- **Zero-Edit Terminal Workflow**: Paste LLM-generated YAML into the terminal or build directly from your clipboard.
+- **Academic Typography**: Classical serif typesetting (`Libertinus Serif`) with LaTeX-grade math (`New Computer Modern`).
+- **Editable PowerPoint Export**: Export directly to widescreen `.pptx` decks while keeping layout and text editable.
+- **Token-Saving Workflow**: Copy [`PROMPT.md`](PROMPT.md) into web LLMs (Claude, Gemini, DeepSeek, ChatGPT) to generate entire slide decks without burning API tokens.
 
 ---
 
-## Prerequisites & Installation
+## 1. Requirements & Setup
 
-### 1. Core Dependency (Required for PDF & Images)
+### Core Requirement (PDF & Images)
 The core compiler requires only the standalone **Typst** binary:
 
 - **Arch Linux**: `pacman -S typst`
-- **macOS (Homebrew)**: `brew install typst`
-- **Linux / Standalone Binary**:
+- **macOS**: `brew install typst`
+- **Linux (Binary)**:
   ```bash
   curl -fsSL https://github.com/typst/typst/releases/latest/download/typst-x86_64-unknown-linux-musl.tar.xz | tar -xJ
   mv typst-*/typst ~/.local/bin/
   ```
 
-### 2. Optional: Python Environment (For PPTX Export & Deep Validation)
-Standard PDF building runs without any Python packages. For editable PowerPoint export (`./slide-maker export-pptx`) or enhanced YAML syntax diagnostics:
+### Optional: Python Environment (For PPTX Export)
+Building PDF slides requires no Python packages. To export editable PowerPoint decks (`./slide-maker export-pptx`) or enable deep YAML schema validation:
 
 ```bash
 # Using uv (fastest):
 uv venv .venv && uv pip install -r requirements.txt
 
-# Or using standard python3 venv:
+# Or using python3 venv:
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 ```
-
-> **Note**: `./slide-maker` automatically detects and uses `.venv/` if present. If you have SVG diagrams in your slides, install `librsvg` (`rsvg-convert`) or `inkscape` so PPTX export can auto-rasterize them into the deck.
-
----
-
-## Quickstart
-
-### 1. Instant Paste & Build (Zero-Edit Workflow)
-Paste generated YAML from web models directly into the terminal or from your clipboard:
-
-```bash
-# Option A: Paste directly in terminal, then press [Ctrl+D] to build
-./slide-maker paste
-
-# Option B: Copy from browser, then build directly from clipboard
-./slide-maker paste -c
-
-# Option C: Pipe directly from a file or command
-cat my_slides.yaml | ./slide-maker paste
-```
-* **Auto-Sanitization**: Strips markdown code fences (```` ```yaml ````) and introductory/concluding chat.
-* **Pre-Flight Validation**: Validates YAML syntax with exact line/column pointers.
-* **Automated Backup**: Preserves your previous working deck at `slides.yaml.bak`.
-* **Verbose Diagnostics**: Highlights syntax errors or Typst math issues with actionable fix suggestions.
-
-### 2. Manual Commands
-```bash
-# Compile slides.yaml -> slides.pdf
-./slide-maker build
-
-# Validate syntax and slide count without compiling
-./slide-maker check
-
-# Watch mode: auto-recompiles on every save to slides.yaml
-./slide-maker watch
-
-# Export each slide as high-res PNG (default: dist/slides/)
-./slide-maker export-images [output_dir]
-
-# Export to native editable PowerPoint deck (default: slides.pptx)
-./slide-maker export-pptx [output.pptx]
-```
+> `./slide-maker` automatically detects and uses `.venv/` if present. If your slides include SVG diagrams, install `librsvg` (`rsvg-convert`) or `inkscape` for automatic SVG-to-PPTX rasterization.
 
 ---
 
-## Themes & Customization (Zero Source Code Editing)
+## 2. How to Use
 
-All design adjustments are controlled directly through `meta` in `slides.yaml` without touching Typst source files:
+The workflow separates content generation from rendering so you never have to hand-format slides:
 
-### 1. Built-in Academic Palettes
+```
+[Web AI / Agent] ──(Copy YAML)──> [Terminal / Clipboard] ──(./slide-maker paste)──> [PDF & PPTX]
+```
+
+### Step-by-Step Workflow:
+1. **Generate**: Copy the prompt instructions from [`PROMPT.md`](PROMPT.md) into any web AI (DeepSeek, Claude, Gemini, ChatGPT) alongside your topic notes.
+2. **Copy**: Copy the generated YAML block from the AI's response.
+3. **Build**: Run either:
+   ```bash
+   ./slide-maker paste -c          # Builds directly from clipboard
+   ```
+   or
+   ```bash
+   ./slide-maker paste             # Paste into terminal, then press Ctrl+D
+   ```
+4. **Done**: The tool auto-sanitizes code fences, validates syntax, backs up the previous deck to `slides.yaml.bak`, and compiles `slides.pdf`.
+
+### CLI Commands Reference:
+| Command | Description |
+| :--- | :--- |
+| `./slide-maker paste [-c]` | Ingests YAML from terminal input or clipboard (`-c`), auto-validates, and compiles. |
+| `./slide-maker build` | Compiles existing `slides.yaml` into `slides.pdf`. |
+| `./slide-maker check` | Validates YAML syntax, schema keys, and slide count without compiling. |
+| `./slide-maker watch` | Auto-recompiles `slides.pdf` on every save to `slides.yaml`. |
+| `./slide-maker export-pptx [out.pptx]` | Converts deck into an editable widescreen PowerPoint file (`slides.pptx`). |
+| `./slide-maker export-images [dir]` | Renders each slide into a high-res PNG (default: `dist/slides/`). |
+| `./slide-maker help` | Displays command options and usage examples. |
+
+---
+
+## 3. Themes & Customization
+
+All styling is configured in the `meta` block of `slides.yaml` without touching Typst templates.
+
+### Built-in Palettes:
 ```yaml
 meta:
   theme: "academic"          # "academic" (default) | "minimal" | "modern"
-  palette: "oxford"          # Built-in presets below
+  palette: "crimson"         # Choose one from table below
 ```
 
-| Palette | Aesthetic Focus | Accent Color |
+| Palette | Aesthetic | Primary Accent |
 | :--- | :--- | :--- |
 | **`oxford`** *(Default)* | Classic British collegiate navy | `#1e40af` (Oxford Blue) |
 | **`crimson`** | Ivy League / Harvard / Stanford | `#991b1b` (Crimson) |
@@ -100,139 +92,59 @@ meta:
 | **`slate`** | Minimalist charcoal / Monochrome | `#334155` (Slate) |
 | **`indigo`** | Contemporary Cambridge | `#4338ca` (Deep Indigo) |
 
-### 2. Custom Hex Colors & Font Overrides
+### Custom Colors & Fonts:
+Override individual colors or typography directly:
 ```yaml
 meta:
   theme: "academic"
   colors:
-    accent: "#8B0000"        # Bullets, category rules, stat numbers
-    primary: "#1A1A1A"       # Main headings and text
+    accent: "#8B0000"        # Accent color (bullets, categories, rules)
+    primary: "#1A1A1A"       # Headings and body text
     muted: "#555555"         # Subtitles and metadata
     background: "#FAFAFA"    # Slide canvas color
-    border: "#E0E0E0"        # Subtle divider lines
+    border: "#E0E0E0"        # Divider lines
   font: "Libertinus Serif"   # "Libertinus Serif" | "New Computer Modern" | "DejaVu Serif"
 ```
 
 ---
 
-## Supported Slide Layouts
+## 4. Supported Slide Layouts
 
-Declare slides in `slides.yaml` using any of the following semantic layouts:
+Declare slides in `slides.yaml` under `slides:` using semantic layouts:
 
-### 1. Title Slide (`layout: "title"`)
-```yaml
-- layout: "title"
-  title: "Consensus Protocols in Distributed Storage"
-  subtitle: "Formal Mechanisms of Raft, Multi-Paxos, and Viewstamped Replication"
-  faculty: "Department of Computer Sciences"
-  presenter: "Prof. Alan Kay"
-  date: "Fall Semester 2026"
-```
+| Layout | Purpose | Key Fields |
+| :--- | :--- | :--- |
+| **`title`** | Presentation title slide | `title`, `subtitle`, `faculty`, `presenter`, `date` |
+| **`content`** | Academic bullet points with callout | `title`, `subtitle`, `category`, `bullets`, `callout` |
+| **`split`** / **`split-diagram`** | 50/50 text and large image/diagram | `image`, `image_position` (`right`\|`left`), `caption`, `bullets` |
+| **`diagram`** / **`image`** | Full-slide architecture diagram / chart | `image`, `caption`, `takeaway` |
+| **`comparison`** | Side-by-side contrast columns | `left_title`, `left_bullets`, `right_title`, `right_bullets`, `conclusion` |
+| **`stat-grid`** | Prominent quantitative metrics | `stats: [{value, unit, label, description}]`, `summary` |
+| **`code`** | Monospace code block with explanation | `language`, `code`, `bullets` |
 
-### 2. Bullets / Content (`layout: "content"`)
-```yaml
-- layout: "content"
-  category: "FOUNDATIONS"
-  title: "The Consensus Problem: Formal Bounds"
-  subtitle: "State Machine Replication under Asynchronous Network Assumptions"
-  bullets:
-    - "**FLP Impossibility Result**: Asynchronous consensus is impossible with crash failures."
-    - "**Partially Synchronous Models**: Practical systems circumvent FLP using randomized timers $\Delta$."
-    - "**State Machine Replication**: Replicas execute identical transitions from $S_0$."
-  callout: "Consensus guarantees linearizability across network partitions."
-```
-
-### 3. Split Slide with Diagram / Image (`layout: "split-diagram"` or `"split-image"`)
-*Visual takes 55%+ of slide width, sized up to 7.4cm high so text/details are clearly visible.*
-```yaml
-- layout: "split-diagram"
-  category: "PROTOCOL MECHANICS"
-  title: "Raft: Quorum-Based Log Replication"
-  image: "assets/consensus-diagram.svg"   # Path relative to root
-  caption: "Figure 1: Leader appends entries before dispatching AppendEntries RPCs."
-  image_position: "right"                # "right" (default) or "left"
-  bullets:
-    - "**Client Proposal**: Client issues mutation $v=42$ exclusively to leader."
-    - "**Commit Threshold**: Once replicated across $\\lfloor N/2 \\rfloor + 1$, entry commits."
-```
-
-### 4. Full-Width Diagram (`layout: "diagram"` or `"image"`)
-*Uses 100% of the slide canvas for large architecture diagrams, flowcharts, or parse trees.*
-```yaml
-- layout: "diagram"
-  category: "SYSTEMS ARCHITECTURE"
-  title: "End-to-End Compiler Pipeline"
-  image: "assets/compiler-pipeline.svg"
-  caption: "Figure 2: Complete frontend lexing, parsing, and execution pipeline."
-  takeaway: "Separating scanning from parsing isolates regular languages from CFGs."
-```
-
-### 5. Side-by-Side Comparison (`layout: "comparison"`)
-```yaml
-- layout: "comparison"
-  category: "TRADE-OFFS"
-  title: "Comparative Analysis: Raft vs Multi-Paxos"
-  left_title: "Raft (Strong Leader)"
-  left_bullets:
-    - "**Log Discrepancy Prevention**: Unidirectional log flow from Leader to Followers."
-  right_title: "Multi-Paxos (Decentralized)"
-  right_bullets:
-    - "**Flexible Roles**: Any replica can propose; amortized phase-1."
-  conclusion: "Raft minimizes bugs in control planes; Paxos excels in active-active DBs."
-```
-
-### 6. Quantitative Metrics Grid (`layout: "stat-grid"`)
-```yaml
-- layout: "stat-grid"
-  category: "EVALUATION"
-  title: "Empirical Performance Under Cluster Degradation"
-  stats:
-    - value: "14.2k"
-      unit: "ops/sec"
-      label: "Peak Write Throughput"
-    - value: "3.1"
-      unit: "ms"
-      label: "P99 Commit Latency"
-  summary: "**Empirical Finding**: Randomized timeouts prevent split-vote livelocks with >99.7% probability."
-```
-
-### 7. Code Walkthrough (`layout: "code"`)
-*Code block occupies 58% of the slide width; font size auto-scales up to 11.5pt for readability.*
-```yaml
-- layout: "code"
-  category: "IMPLEMENTATION"
-  title: "Scanner & Whitespace Stripper"
-  language: "c"
-  code: |
-    void skip_whitespace() {
-        while (*src && isspace(*src)) src++;
-    }
-  bullets:
-    - "**Stream Pointer**: Global `src` pointer tracks current character position."
-    - "**Lexical Phase**: Strips whitespace between tokens."
-```
+*(See [`slides.yaml`](slides.yaml) for a complete 40-slide working reference.)*
 
 ---
 
-## File Structure
+## 5. Project Structure
 
 ```
 slide-maker/
-├── slides.yaml            # Intermediate presentation data (Content & Theme)
-├── slides.typ             # Root compilation entry point
-├── slide-maker            # CLI executable (build, paste, check, watch, export-images)
-├── PROMPT.md              # Copy-paste system prompt for web LLMs
-├── AGENT_INSTRUCTIONS.md  # Detailed schema rules for autonomous agents
-├── assets/                # SVGs, images, and diagrams
+├── slides.yaml            # Intermediate slide data (content & styling)
+├── slides.typ             # Root Typst compilation template
+├── slide-maker            # Main CLI tool (build, paste, watch, pptx)
+├── requirements.txt       # Optional Python dependencies (python-pptx)
+├── PROMPT.md              # Token-saving prompt to copy into web LLMs
+├── AGENT_INSTRUCTIONS.md  # Formal schema specifications for coding agents
+├── assets/                # Slide diagrams, images, and figures
 ├── scripts/
-│   └── builder.py         # Ingestion, validation, and diagnostics engine
-├── template/
-│   ├── theme.typ          # Dynamic theme dispatcher
-│   └── themes/
-│       ├── academic.typ   # Default academic theme
-│       ├── minimal.typ    # Minimalist monochrome theme
-│       ├── modern.typ     # Card / boxed modern theme
-│       └── common.typ     # Shared math, palette, and font resolvers
-└── dist/
-    └── slides/            # Rendered PNG slide images
+│   ├── builder.py         # Ingestion, validation, and paste engine
+│   └── export_pptx.py     # Native PowerPoint exporter
+└── template/
+    ├── theme.typ          # Dynamic theme dispatcher
+    └── themes/
+        ├── academic.typ   # Primary academic layout
+        ├── minimal.typ    # Minimal monochrome layout
+        ├── modern.typ     # Contemporary boxed layout
+        └── common.typ     # Shared math, palettes, and font resolvers
 ```
