@@ -42,13 +42,16 @@ mv typst-*/typst ~/.local/bin/
 ### 3. Optional: Python Environment (For PPTX Export)
 Building PDF slides requires no Python packages. To export editable PowerPoint decks (`./slide-maker export-pptx`) or enable deep YAML schema validation:
 
+**Using `uv` (Fastest):**
 ```bash
-# Using uv (fastest):
 uv venv .venv && uv pip install -r requirements.txt
+```
 
-# Or using python3 venv:
+**OR using standard `python3`:**
+```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 ```
+
 > `./slide-maker` automatically detects and uses `.venv/` if present. If your slides include SVG diagrams, install `librsvg` (`rsvg-convert`) or `inkscape` for automatic SVG-to-PPTX rasterization.
 
 ---
