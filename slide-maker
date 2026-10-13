@@ -77,6 +77,13 @@ except Exception as e:
     if [ -f "$SCRIPT_DIR/.venv/bin/python" ]; then
       PYTHON_CMD="$SCRIPT_DIR/.venv/bin/python"
     fi
+    if ! $PYTHON_CMD -c "import pptx" >/dev/null 2>&1; then
+      echo "Error: 'python-pptx' library is required for PPTX export." >&2
+      echo "Quick install:" >&2
+      echo "  uv venv .venv && uv pip install -r requirements.txt" >&2
+      echo "  # or: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt" >&2
+      exit 1
+    fi
     $PYTHON_CMD "$SCRIPT_DIR/scripts/export_pptx.py" "$OUT_FILE"
     ;;
 

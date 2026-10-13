@@ -1,4 +1,7 @@
 dist/
 *.tmp
 *.bak
+*.pptx
+.venv/
 .DS_Store
+
