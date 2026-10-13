@@ -14,16 +14,31 @@ Designed for seamless **Human + Agentic AI** collaboration:
 
 ## Quickstart
 
-### Build PDF
+### 1. Instant Paste & Auto-Build (Zero-Edit Workflow)
+Paste your LLM output directly into the terminal or from the system clipboard:
+
+```bash
+# Paste directly in the terminal, then press [Ctrl+D] to build:
+./slide-maker paste
+
+# Or build directly from your system clipboard:
+./slide-maker paste -c
+
+# Or pipe output directly:
+cat generated.yaml | ./slide-maker paste
+```
+* Automatically strips markdown fences (```` ```yaml ````) and conversational chatter.
+* Validates YAML syntax with exact line/column error pointers.
+* Compiles PDF immediately and prints page stats.
+
+### 2. Manual Build
 ```bash
 ./slide-maker build
-# Produces slides.pdf in < 1 second
 ```
 
-### Auto-Recompile on Edit (Watch Mode)
+### 3. Auto-Recompile on Edit (Watch Mode)
 ```bash
 ./slide-maker watch
-# Automatically updates slides.pdf every time you save slides.yaml
 ```
 
 ### Export Slides to PNG

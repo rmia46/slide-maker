@@ -19,10 +19,40 @@ case "$COMMAND" in
     check_typst
     echo "⚡ Compiling slides.yaml -> slides.pdf..."
     start_time=$(date +%s%N)
-    typst compile slides.typ slides.pdf
+    if ! typst compile slides.typ slides.pdf; then
+      echo "" >&2
+      echo "✗ Typst compilation failed!" >&2
+      echo "Tip: Run './slide-maker check' or check slides.yaml for invalid YAML or unescaped characters." >&2
+      exit 1
+    fi
     end_time=$(date +%s%N)
     elapsed_ms=$(( (end_time - start_time) / 1000000 ))
     echo "✓ Generated slides.pdf in ${elapsed_ms}ms"
+    if command -v pdfinfo >/dev/null 2>&1; then
+      pdfinfo slides.pdf | grep -E "^(Pages|Page size):" | sed 's/^/  • /' || true
+    fi
+    ;;
+
+  paste)
+    shift || true
+    check_typst
+    python3 "$SCRIPT_DIR/scripts/builder.py" "$@"
+    ;;
+
+  check)
+    shift || true
+    python3 -c "
+import sys, yaml
+from pathlib import Path
+try:
+    data = yaml.safe_load(Path('slides.yaml').read_text())
+    print('✓ slides.yaml syntax is valid.')
+    print(f'  • Title: {data.get(\"meta\", {}).get(\"title\", \"Untitled\")}')
+    print(f'  • Total Slides: {len(data.get(\"slides\", []))}')
+except Exception as e:
+    print(f'✗ Validation error in slides.yaml:\n{e}', file=sys.stderr)
+    sys.exit(1)
+"
     ;;
 
   watch)
@@ -45,10 +75,17 @@ case "$COMMAND" in
     echo "Usage: ./slide-maker [command]"
     echo ""
     echo "Commands:"
-    echo "  build            Compile slides.yaml to slides.pdf (default)"
-    echo "  watch            Auto-recompile on every edit to slides.yaml"
-    echo "  export-images    Render each slide as PNG (default: dist/slides/)"
-    echo "  help             Show this help message"
+    echo "  paste [--clipboard|-c]   Paste YAML/LLM output directly to auto-validate & build"
+    echo "  build                    Compile slides.yaml to slides.pdf (default)"
+    echo "  check                    Validate syntax and structure of slides.yaml"
+    echo "  watch                    Auto-recompile on every edit to slides.yaml"
+    echo "  export-images [dir]      Render each slide as PNG (default: dist/slides/)"
+    echo "  help                     Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  ./slide-maker paste                 # Paste directly in terminal, press Ctrl+D"
+    echo "  ./slide-maker paste -c              # Instantly build from system clipboard"
+    echo "  cat my_deck.yaml | ./slide-maker paste"
     ;;
 
   *)

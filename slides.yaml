@@ -1,248 +1,550 @@
 meta:
   theme: "academic"
-  colors:
-    accent: "#4d7c0f"        # Academic Lime Green (deep readable lime)
-    primary: "#0f172a"       # Slate 900
-    muted: "#475569"         # Slate 600
-    background: "#ffffff"    # Clean canvas
-    border: "#bef264"        # Lime-300 divider lines
-  font: "Libertinus Serif"
-  title: "Formal Grammars & Language Syntax"
-  faculty: "Concepts of Programming Languages • Computer Science"
-  presenter: "Theory to Practical Systems"
-  date: "Spring 2026"
+  palette: "crimson"
+  title: "Formal Grammar: The Blueprint of Every Language"
+  faculty: "CSE425 — Concepts of Programming Languages"
+  presenter: "Lecture Series"
+  date: "Lecture 03"
 
 slides:
-  # Slide 1: Title Slide
   - layout: "title"
-    title: "Formal Grammars & Language Syntax"
-    subtitle: "From Mathematical Foundations to a Working Recursive Descent C Parser"
-    faculty: "Concepts of Programming Languages • Computer Science"
-    presenter: "Theory to Implementation Series"
-    date: "Spring 2026"
+    title: "Formal Grammar"
+    subtitle: "How We Describe, Generate, and Recognize the Syntax of Programming Languages"
+    faculty: "CSE425 — Concepts of Programming Languages"
+    presenter: "Instructor"
+    date: "Lecture 03"
 
-  # Slide 2: Analogy & Intuition
   - layout: "content"
-    category: "INTUITION & ANALOGY"
-    title: "What is a Formal Grammar?"
-    subtitle: "Bridging Natural Language Intuition to Programming Syntax"
+    category: "MOTIVATION"
+    title: "Why Do We Need Formal Grammar?"
+    subtitle: "Because natural language rules are too vague for machines"
     bullets:
-      - "**Natural Language Analogy**: English defines sentences as `Subject + Verb + Object` (*'The compiler generates code'* vs invalid *'Compiler code generates the'*)."
-      - "**Syntax vs Semantics**: Syntax specifies structural legality; semantics specifies runtime meaning. Chomsky's sentence *'Colorless green ideas sleep furiously'* is syntactically flawless but semantically meaningless."
-      - "**The Compiler's Blueprint**: A formal grammar provides the mathematical specification that determines every valid string in a language."
-      - "**Mechanical Verification**: Rather than writing millions of ad-hoc string checks, compilers rely on formal grammars to systematically validate source code."
-    callout: "Syntax is the shape of code; formal grammar is the mathematical blueprint that guarantees that shape."
+      - "**The Problem**: If I say 'put the thing over there', a human understands — a computer sees only characters. We need **exact rules** that leave zero ambiguity."
+      - "**The Need**: We must tell a compiler, with mathematical precision, **which strings are valid programs** and which are not."
+      - "**The Solution**: A **formal grammar** is a finite set of rules that can generate (and therefore describe) an infinite set of valid strings."
+      - "**The Payoff**: Once grammar is formal, we can build **automata** that mechanically recognize valid code — this is exactly what lexers and parsers do."
+    callout: "A grammar is a recipe: start with a symbol, keep applying rules, and every sentence you can cook up is a valid sentence of the language."
 
-  # Slide 3: Formal Mathematical Definition
   - layout: "content"
-    category: "MATHEMATICAL FOUNDATION"
-    title: "The 4-Tuple: Formal Grammar Definition"
-    subtitle: "A Generative Mathematical Device Defined as G = (V_N, V_T, P, S)"
+    category: "MOTIVATION"
+    title: "A Day in the Life of a Compiler"
+    subtitle: "Where grammar shows up at every stage"
     bullets:
-      - "**Non-Terminals ($V_N$)**: Syntactic variables (placeholders) expanded during derivation (e.g., `Expr`, `Term`, `Factor`)."
-      - "**Terminals ($V_T$)**: The alphabet of literal tokens that appear in source code (e.g., `+`, `*`, `(`, `)`, integer constants)."
-      - "**Production Rules ($P$)**: Rewrite rules of the form $A -> alpha$, specifying how variables expand into strings in $(V_N union V_T)^*.$"
-      - "**Start Symbol ($S$)**: The distinguished root non-terminal from which all valid sentences originate ($S in V_N$)."
-    callout: "A language $L(G)$ is the set of all terminal strings that can be derived starting from $S$ using rules in $P$."
+      - "**Lexing**: Regex (a regular grammar) groups characters into tokens — 'print', 'x', '+', '42'."
+      - "**Parsing**: A context-free grammar groups tokens into statements and expressions."
+      - "**Semantic Analysis**: The parse tree is checked against rules that a grammar cannot express."
+      - "**Code Generation**: The tree's shape — determined by the grammar — dictates the target code emitted."
+    callout: "A compiler is a pipeline of grammar-driven transformations. Every stage consumes the output of the previous one and re-validates structure."
 
-  # Slide 4: Chomsky Hierarchy Comparison
-  - layout: "comparison"
-    category: "THEORETICAL CLASSIFICATION"
-    title: "The Chomsky Hierarchy of Grammars"
-    subtitle: "Selecting the Right Theoretical Model for Programming Language Syntax"
-    left_title: "Type 3: Regular Grammars"
-    left_bullets:
-      - "**Rule Format**: $A -> a B$ or $A -> a$ (Strictly linear transitions)."
-      - "**Recognition Model**: Deterministic Finite Automata (DFA, zero memory)."
-      - "**Role in Compilers**: Lexical analysis (tokenizing numbers, keywords)."
-      - "**Fundamental Limit**: Cannot match arbitrary nested brackets $a^n b^n$."
-    right_title: "Type 2: Context-Free Grammars"
-    right_bullets:
-      - "**Rule Format**: $A -> gamma$ where $gamma in (V_N union V_T)^*.$"
-      - "**Recognition Model**: Pushdown Automata (Stack memory)."
-      - "**Role in Compilers**: Syntax analysis (building parse trees and ASTs)."
-      - "**Key Capability**: Naturally expresses nested blocks, expressions, and recursion."
-    conclusion: "Modern compilers pair Regular Grammars (Type 3) for high-speed tokenization with Context-Free Grammars (Type 2) for hierarchical program structure."
-
-  # Slide 5: BNF & EBNF Notation
-  - layout: "content"
-    category: "SYNTAX SPECIFICATION"
-    title: "Backus-Naur Form (BNF) & Extended BNF"
-    subtitle: "The Universal Metalanguage for Defining Programming Languages"
-    bullets:
-      - "**Classical BNF**: Introduced for ALGOL 60; uses `::=` for production and `|` for alternatives (`<Expr> ::= <Expr> + <Term> | <Term>`)."
-      - "**EBNF Repetition `{ ... }`**: Denotes zero or more repetitions, eliminating awkward recursive rules (`Expr ::= Term { ('+' | '-') Term }`)."
-      - "**EBNF Optionality `[ ... ]`**: Denotes optional components (e.g., `ReturnStmt ::= 'return' [ Expr ] ';'`)."
-      - "**EBNF Grouping `( ... )`**: Enforces local precedence without polluting the grammar with intermediate variable names."
-    callout: "EBNF transforms recursive grammar definitions into concise, iterative loops when writing parsers."
-
-  # Slide 6: Parse Trees & Derivations
   - layout: "split-diagram"
-    category: "STRUCTURAL REPRESENTATION"
-    title: "Derivations and Concrete Parse Trees"
-    subtitle: "Visualizing Hierarchical Precedence for Expression '3 + 4 * 5'"
-    image: "assets/parse-tree.svg"
-    caption: "Figure 1: Concrete Parse Tree: Multiplication sits deeper in the tree, giving it higher precedence."
+    category: "MENTAL MODEL"
+    title: "Grammar as a Recipe"
+    subtitle: "Intuition before formalism"
+    image: "assets/recipe-analogy.svg"
+    caption: "Figure: Grammar recipe — start symbol is the dish; productions are steps; terminals are the ingredients."
     image_position: "right"
     bullets:
-      - "**Derivation**: Step-by-step string substitution starting at root `<Expr>`."
-      - "**Leftmost Derivation**: Replaces the leftmost non-terminal at every step until only terminals remain."
-      - "**Tree Anatomy**: Root is start symbol `<Expr>`, interior nodes are non-terminals, and leaves are tokens."
-      - "**Precedence via Depth**: Nodes lower in the tree evaluate earlier than nodes near the root."
+      - "**Start Symbol**: The dish you want to cook (e.g. 'a program')."
+      - "**Non-Terminals**: Intermediate preparations (e.g. 'the sauce', 'the main')."
+      - "**Terminals**: Final ingredients you never break down further (e.g. 'salt', 'the + character')."
+      - "**Productions**: The steps — 'to make a program, make a statement, then more statements'."
+    callout: "Cooking is generation. A health inspector tasting the dish and reconstructing the recipe is recognition — parsing."
 
-  # Slide 7: Ambiguity & Resolution
-  - layout: "comparison"
-    category: "GRAMMAR ENGINEERING"
-    title: "Grammar Ambiguity & Precedence Stratification"
-    subtitle: "Guaranteeing Deterministic, Unique Parse Trees for Every Input"
-    left_title: "Ambiguous Grammar (Broken)"
-    left_bullets:
-      - "**Flawed Rule**: $E -> E + E$ or $E -> E times E$ or `num`."
-      - "**Multiple Interpretations**: Input `3 + 4 * 5` yields two distinct trees ($23$ or $35$)."
-      - "**Dangling Else**: Ambiguity in nested `if (a) if (b) s1 else s2`."
-      - "**Compiler Failure**: Compilers cannot tolerate non-deterministic code behavior."
-    right_title: "Stratified Grammar (Correct)"
-    right_bullets:
-      - "**Precedence Tiers**: Split rules into tiers: `Expr` -> `Term` -> `Factor`."
-      - "**Binding Tightness**: Factor handles numbers/parens; Term handles `*`, `/`; Expr handles `+`, `-`."
-      - "**Associativity Rule**: Left-recursive productions enforce standard left-to-right evaluation."
-      - "**Unambiguous Guarantee**: Guarantees exactly one valid parse tree per program."
-    conclusion: "Stratifying a grammar into distinct precedence layers mathematically eliminates ambiguity without changing the language."
+  - layout: "content"
+    category: "FOUNDATIONS"
+    title: "What Is a Formal Grammar? The 4-Tuple"
+    subtitle: "The mathematical definition"
+    bullets:
+      - "**Formally**: $G = (V, T, P, S)$ — four components that fully define a language."
+      - "**$V$ — Non-Terminals**: A finite set of placeholders or categories (`Expr`, `Stmt`, `Term`)."
+      - "**$T$ — Terminals**: A finite set of actual symbols that appear in the final string ($a$, $b$, if, +)."
+      - "**$P$ — Productions**: A finite set of rewrite rules of the form $alpha -> beta$ where $alpha$ contains at least one non-terminal."
+    callout: "$V$ and $T$ are disjoint sets. $S$ in $V$ is the unique start symbol. Every derivation begins at $S$."
 
-  # Slide 8: Compiler Architecture Pipeline
   - layout: "split-diagram"
-    category: "SYSTEMS ARCHITECTURE"
-    title: "The Syntax Analysis Architecture"
-    subtitle: "From Continuous Character Stream to Executable Evaluation"
-    image: "assets/compiler-pipeline.svg"
-    caption: "Figure 2: Compiler front-end pipeline separating tokenization from grammar analysis."
+    category: "FOUNDATIONS"
+    title: "The Four Components Visualized"
+    subtitle: "Anatomy of a grammar"
+    image: "assets/grammar-anatomy.svg"
+    caption: "Figure: Anatomy — V (non-terminals), T (terminals), P (productions), S (start)."
     image_position: "left"
     bullets:
-      - "**Lexer (Scanner)**: Uses regular patterns to group raw characters into categorized tokens (`[NUM, PLUS, NUM]`)."
-      - "**Parser**: Validates token sequences against CFG rules and organizes them into a hierarchical tree."
-      - "**The Algorithmic Bridge**: In a Recursive Descent Parser, each non-terminal rule maps to a single C function."
-      - "**Direct Evaluation**: An interpreter evaluates values on-the-fly directly inside parsing functions."
+      - "**Non-Terminals ($V$)**: Round nodes in a parse tree — internal structure."
+      - "**Terminals ($T$)**: Square leaves — the final string."
+      - "**Productions ($P$)**: Arrows in the tree — each arrow is one rule application."
+      - "**Start Symbol ($S$)**: The root of the tree — where every derivation begins."
+    callout: "Change any of the four components and you change the language. They are the four dials of syntax."
 
-  # Slide 9: Mini Project in C - Lexer
-  - layout: "code"
-    category: "MINI PROJECT IN C"
-    title: "Part 1: The Scanner & Whitespace Stripper"
-    language: "c"
-    code: |
-      #include <stdio.h>
-      #include <ctype.h>
-
-      const char *src;
-
-      void skip_whitespace() {
-          while (*src && isspace(*src)) src++;
-      }
-
-      // Consumes and returns next integer constant
-      int parse_factor();
-      int parse_term();
-      int parse_expr();
-    bullets:
-      - "**Stream Pointer**: Global `src` pointer tracks current character position."
-      - "**Lexical Phase**: `skip_whitespace()` strips blanks, newlines, and tabs between tokens."
-      - "**Forward Declarations**: Mutually recursive grammar rules require C function prototypes."
-
-  # Slide 10: Mini Project in C - Parser
-  - layout: "code"
-    category: "MINI PROJECT IN C"
-    title: "Part 2: Recursive Descent Parsing Functions"
-    language: "c"
-    code: |
-      int parse_factor() {
-          skip_whitespace();
-          if (*src == '(') {
-              src++; // consume '('
-              int val = parse_expr();
-              if (*src == ')') src++; // consume ')'
-              return val;
-          }
-          int val = 0;
-          while (*src && isdigit(*src))
-              val = val * 10 + (*src++ - '0');
-          return val;
-      }
-
-      int parse_term() {
-          int val = parse_factor();
-          while (1) {
-              skip_whitespace();
-              if (*src == '*') { src++; val *= parse_factor(); }
-              else if (*src == '/') { src++; val /= parse_factor(); }
-              else break;
-          }
-          return val;
-      }
-    bullets:
-      - "**Factor Rule**: Handles base numbers and nested sub-expressions inside `( ... )`."
-      - "**Term Rule**: Implements `Term -> Factor { ('*' | '/') Factor }` with higher precedence."
-      - "**Direct Evaluation**: Values are calculated immediately as the syntax is recognized."
-
-  # Slide 11: Mini Project in C - Expr & Main
-  - layout: "code"
-    category: "MINI PROJECT IN C"
-    title: "Part 3: Top-Level Expression & Test Suite"
-    language: "c"
-    code: |
-      int parse_expr() {
-          int val = parse_term();
-          while (1) {
-              skip_whitespace();
-              if (*src == '+') { src++; val += parse_term(); }
-              else if (*src == '-') { src++; val -= parse_term(); }
-              else break;
-          }
-          return val;
-      }
-
-      int main() {
-          src = "3 + 4 * 5";
-          printf("Result: %d\n", parse_expr()); // Output: 23
-
-          src = "(3 + 4) * 5";
-          printf("Result: %d\n", parse_expr()); // Output: 35
-          return 0;
-      }
-    bullets:
-      - "**Expr Rule**: Implements `Expr -> Term { ('+' | '-') Term }` at lowest precedence level."
-      - "**Correct Precedence**: `3 + 4 * 5` outputs `23` because `parse_term` executes first."
-      - "**Parentheses Override**: `(3 + 4) * 5` outputs `35` via recursive call to `parse_expr`."
-
-  # Slide 12: Empirical Metrics & Verification
-  - layout: "stat-grid"
-    category: "PROJECT VERIFICATION"
-    title: "Mini Project Metrics & Complexity Analysis"
-    stats:
-      - value: "100%"
-        unit: "accuracy"
-        label: "Precedence Precision"
-        description: "Evaluates '3 + 4 * 5' -> 23 and '(3 + 4) * 5' -> 35"
-      - value: "68"
-        unit: "lines"
-        label: "Total C Source Footprint"
-        description: "Self-contained C99 with zero external dependencies"
-      - value: "O(N)"
-        unit: "time"
-        label: "Linear Parsing Complexity"
-        description: "Single-pass LL(1) parsing without backtracking"
-      - value: "0"
-        unit: "allocations"
-        label: "Dynamic Memory Overhead"
-        description: "Zero malloc calls; utilizes execution call stack"
-    summary: "**Core Finding**: Translating an EBNF grammar directly into recursive descent functions achieves optimal $O(N)$ execution with zero memory overhead."
-
-  # Slide 13: Summary & Key Takeaways
   - layout: "content"
-    category: "SYNTHESIS & TAKEAWAYS"
-    title: "From Formal Grammar to Production Compilers"
-    subtitle: "How Foundations in Theory Enable Industrial-Scale Software Engineering"
+    category: "TERMINOLOGY"
+    title: "The Vocabulary You Must Know"
+    subtitle: "Six terms that unlock every grammar discussion"
     bullets:
-      - "**Mathematical Rigor**: Formal grammars eliminate guesswork by defining syntax as a provable mathematical set of strings."
-      - "**Chomsky Hierarchy in Practice**: Real compilers divide tasks: regular grammars for scanning tokens, context-free grammars for parsing syntax."
-      - "**Parser Generators vs Hand-Written**: While tools like Flex/Bison generate parsers automatically, modern compilers (GCC, Clang, Rustc) favor hand-crafted recursive descent for superior error reporting."
-      - "**Your Accomplishment**: You now understand the full continuum from formal 4-tuple grammar definitions to a functioning C interpreter."
-    callout: "Grammars are not just theoretical constructs; they are the architectural blueprint of every programming language in existence."
+      - "**Alphabet ($Sigma$)**: The finite set of raw symbols — for a binary language, $Sigma = {0, 1}$."
+      - "**String**: A finite sequence of symbols from the alphabet — e.g. $0110$, or 'print x'."
+      - "**Language ($L$)**: A set of strings over $Sigma$ — e.g. 'all strings with equal 0s and 1s'."
+      - "**$epsilon$**: The empty string of length 0 — not the same as the empty language $emptyset$."
+    callout: "A grammar defines a language. A language is just a set of strings. Everything else is machinery on top of these three ideas."
+
+  - layout: "comparison"
+    category: "TERMINOLOGY"
+    title: "String vs Language vs Grammar"
+    subtitle: "Three levels of abstraction"
+    left_title: "Concrete Level"
+    left_bullets:
+      - "**String**: One specific sequence — 'abba', 'print 42'."
+      - "**Alphabet**: The raw symbols available — a, b, 0, 1, print."
+      - "**Membership**: A string either is or is not in the language."
+    right_title: "Abstract Level"
+    right_bullets:
+      - "**Language**: The infinite set of all valid strings."
+      - "**Grammar**: The finite rule set that defines the language."
+      - "**Closure**: Languages are closed under union, concatenation, and star."
+    conclusion: "A grammar is a finite description of an infinite language. This compression is the entire reason grammars exist."
+
+  - layout: "content"
+    category: "CORE MECHANISM"
+    title: "The Central Idea: Derivation"
+    subtitle: "Generating a string is a game of substitution"
+    bullets:
+      - "**Derivation**: Start from $S$. Repeatedly pick a non-terminal and replace it with the right-hand side of one of its production rules."
+      - "**The Goal**: Keep substituting until no non-terminals remain — what is left is a string in the language."
+      - "**Example Grammar**: $S -> a S b$ and $S -> epsilon$. This says: 'wrap an a and b around an S, or stop.'"
+      - "**Generated Language**: This grammar produces ${ a^n b^n | n >= 0 }$ = $epsilon$, $a b$, $a a b b$, $a a a b b b$, and so on."
+    callout: "Derivation is the grammar producing a string. Recognition (parsing) is the reverse: given a string, can the grammar produce it?"
+
+  - layout: "split-diagram"
+    category: "CORE MECHANISM"
+    title: "Step-by-Step Derivation Visualized"
+    subtitle: "Deriving 'aabb' from $S -> a S b$ | $epsilon$"
+    image: "assets/derivation-steps.svg"
+    caption: "Figure: Substitution sequence — each arrow is one production application."
+    image_position: "right"
+    bullets:
+      - "**Step 0**: $S$ — begin at the start symbol."
+      - "**Step 1**: $a S b$ — apply $S -> a S b$."
+      - "**Step 2**: $a a S b b$ — apply $S -> a S b$ again."
+      - "**Step 3**: $a a b b$ — apply $S -> epsilon$ to finish."
+    callout: "Every intermediate line is a sentential form. Only the final line — with no non-terminals — is a sentence."
+
+  - layout: "content"
+    category: "DERIVATION TYPES"
+    title: "Leftmost vs Rightmost Derivation"
+    subtitle: "Order matters for parsers"
+    bullets:
+      - "**Leftmost Derivation**: Always expand the leftmost non-terminal first — deterministic order, easy for top-down parsers."
+      - "**Rightmost Derivation**: Always expand the rightmost non-terminal first — used in bottom-up parsing (LR parsers)."
+      - "**Same Tree, Different Order**: Both derivations produce the same parse tree — only the substitution order differs."
+      - "**Why It Matters**: Parsers must commit to one order to be deterministic; the other is used for analysis."
+    callout: "If a sentence has exactly one leftmost derivation, the grammar is unambiguous. Two leftmost derivations means ambiguity."
+
+  - layout: "comparison"
+    category: "INTUITION"
+    title: "Generation vs Recognition"
+    subtitle: "Two directions of the same relationship"
+    left_title: "Generation (Grammar to String)"
+    left_bullets:
+      - "**Forward direction**: Start at $S$, apply rules, produce a valid sentence."
+      - "**Use case**: Defining a language — what is allowed."
+      - "**Human analogy**: Following a recipe to cook a dish."
+    right_title: "Recognition (String to Grammar)"
+    right_bullets:
+      - "**Backward direction**: Given a string, decide if it belongs to the language."
+      - "**Use case**: Parsing source code — is this valid?"
+      - "**Human analogy**: Tasting a dish and figuring out the recipe."
+    conclusion: "Every parser is a recognition machine built from a grammar. Every grammar is a generation machine that defines what the parser accepts."
+
+  - layout: "content"
+    category: "TERMINOLOGY"
+    title: "Sentential Form vs Sentence"
+    subtitle: "Half-cooked vs fully cooked"
+    bullets:
+      - "**Sentential Form**: Any string of terminals AND non-terminals reachable from $S$ — a partially cooked dish."
+      - "**Sentence**: A sentential form with only terminals — a fully cooked dish, i.e. a member of the language."
+      - "**Leftmost Derivation**: Always expand the leftmost non-terminal first — deterministic order."
+      - "**Rightmost Derivation**: Always expand the rightmost non-terminal first — used in bottom-up parsing."
+    callout: "The same sentence can have many derivations. When a sentence has two different parse trees, the grammar is ambiguous — a serious problem."
+
+  - layout: "split-diagram"
+    category: "WORKED EXAMPLE"
+    title: "Parse Tree: Derivation Made Visual"
+    subtitle: "Grammar: $E -> E + E$ | $E times E$ | $i d$"
+    image: "assets/parse-tree.svg"
+    caption: "Figure: Two parse trees for `id + id * id` — the classic ambiguity example."
+    image_position: "right"
+    bullets:
+      - "**Root**: The start symbol $E$ sits at the top of every parse tree."
+      - "**Internal Nodes**: Each non-terminal expansion becomes an internal node with children equal to the RHS symbols."
+      - "**Leaves**: The terminals, read left-to-right, form the derived string."
+      - "**Ambiguity**: If a string has two distinct parse trees, the grammar is ambiguous — the compiler cannot decide meaning."
+    callout: "Fix ambiguity with precedence and associativity rules, or rewrite the grammar into unambiguous layers (`Expr` -> `Term` -> `Factor`)."
+
+  - layout: "content"
+    category: "AMBIGUITY"
+    title: "Ambiguity: When Grammar Fails"
+    subtitle: "Two trees, one string, no way to decide"
+    bullets:
+      - "**Definition**: A grammar is ambiguous if some string has two or more distinct parse trees."
+      - "**The Classic Case**: $E -> E + E$ | $E times E$ | $i d$ — `id + id * id` has two trees."
+      - "**The Consequence**: The compiler does not know whether to add first or multiply first — different results!"
+      - "**The Fixes**: Introduce precedence layers, enforce associativity, or use a different grammar."
+    callout: "Ambiguity is not a property of a string — it is a property of the grammar. The same language can have both ambiguous and unambiguous grammars."
+
+  - layout: "split-diagram"
+    category: "AMBIGUITY"
+    title: "Two Trees for One String"
+    subtitle: "`id + id * id` — which tree is correct?"
+    image: "assets/ambiguity-two-trees.svg"
+    caption: "Figure: Left tree groups (id + id) * id; right tree groups id + (id * id). Different semantics."
+    image_position: "right"
+    bullets:
+      - "**Left Tree**: Multiplication at the top — multiplication has lower precedence than addition."
+      - "**Right Tree**: Addition at the top — multiplication has higher precedence (the conventional answer)."
+      - "**Precedence**: A rule that says which operator binds tighter — resolved by grammar layering."
+      - "**Associativity**: A rule for equal precedence — left or right — resolved by recursive rule shape."
+    callout: "Rewrite as $E -> E + T$ | $T$, $T -> T times F$ | $F$, $F -> i d$ — ambiguity vanishes, precedence emerges naturally."
+
+  - layout: "content"
+    category: "GRAMMAR NOTATION"
+    title: "BNF: The Standard Notation"
+    subtitle: "Backus-Naur Form — the practical face of context-free grammars"
+    bullets:
+      - "**Notation**: `A ::= X Y | Z` — non-terminals in angle brackets, `::=` means 'is defined as', `|` means 'or'."
+      - "**Example**: `<expr> ::= <expr> '+' <term> | <term>` and `<term> ::= 'id'`."
+      - "**Recursion**: Rules may refer to themselves — this is what lets a grammar describe infinitely many strings."
+      - "**Readability Cost**: BNF gets verbose fast. Repetition requires explicit recursive rules, which bloats the spec."
+    callout: "BNF is exactly a Context-Free Grammar (Chomsky Type 2) written in a human-friendly syntax."
+
+  - layout: "content"
+    category: "GRAMMAR NOTATION"
+    title: "BNF in Practice: A Tiny Language"
+    subtitle: "Arithmetic expressions in pure BNF"
+    bullets:
+      - "**Rule 1**: `<expr> ::= <expr> '+' <term> | <term>` — an expression is a sum of terms."
+      - "**Rule 2**: `<term> ::= <term> '*' <factor> | <factor>` — a term is a product of factors."
+      - "**Rule 3**: `<factor> ::= '(' <expr> ')' | <number>` — a factor is a parenthesized expr or a number."
+      - "**Rule 4**: `<number> ::= <digit> | <number> <digit>` — numbers are built from digits."
+    callout: "Four rules describe infinitely many arithmetic expressions. This is the compression power of formal grammars."
+
+  - layout: "comparison"
+    category: "GRAMMAR NOTATION"
+    title: "BNF vs EBNF"
+    subtitle: "Verbose clarity vs compact convenience"
+    left_title: "BNF (Plain)"
+    left_bullets:
+      - "**Repetition**: Requires explicit recursive rules — e.g. $A -> Y A$ | $epsilon$."
+      - "**Optionality**: Requires two alternative rules."
+      - "**Strength**: Strict CFG form; directly feeds into theory and proofs."
+    right_title: "EBNF (Extended)"
+    right_bullets:
+      - "**Repetition**: Curly braces around Y means zero-or-more — no recursion needed."
+      - "**Optionality**: Square brackets around Y means optional in one symbol."
+      - "**Strength**: Compact, readable — used in every modern language spec (Java, Python, SQL)."
+    conclusion: "EBNF is not more powerful than BNF — any EBNF grammar converts mechanically to BNF. It is purely a notational convenience."
+
+  - layout: "content"
+    category: "GRAMMAR NOTATION"
+    title: "EBNF Operators Cheat Sheet"
+    subtitle: "Five symbols that compress any grammar"
+    bullets:
+      - "**Curly Braces { X }**: Zero or more repetitions of X — replaces tail recursion."
+      - "**Square Brackets [ X ]**: Optional X (zero or one) — replaces two-rule alternatives."
+      - "**Parentheses ( X Y )**: Grouping — treat X Y as one unit."
+      - "**Vertical Bar X | Y**: Alternation — same as BNF's choice operator."
+    callout: "Convert { X } to a new non-terminal $A -> X A$ | $epsilon$. Convert [ X ] to $A -> X$ | $epsilon$. EBNF collapses to BNF mechanically."
+
+  - layout: "code"
+    category: "IMPLEMENTATION"
+    title: "A Real Grammar, In Code Form"
+    language: "python"
+    code: |
+      # Grammar: expr ::= term { ("+" | "-") term }
+      #          term ::= factor { ("*" | "/") factor }
+      #          factor ::= NUMBER | "(" expr ")"
+
+      def parse_expr(tokens):
+          left = parse_term(tokens)
+          while peek(tokens) in ('+', '-'):
+              op = consume(tokens)
+              right = parse_term(tokens)
+              left = BinOp(op, left, right)
+          return left
+
+      def parse_term(tokens):
+          left = parse_factor(tokens)
+          while peek(tokens) in ('*', '/'):
+              op = consume(tokens)
+              right = parse_factor(tokens)
+              left = BinOp(op, left, right)
+          return left
+    bullets:
+      - "**One Method Per Rule**: Each grammar rule becomes one parser function — direct translation from EBNF to code."
+      - "**Layered Precedence**: expr to term to factor enforces that `*` binds tighter than +, resolving ambiguity structurally."
+      - "**Recursion = Stack**: The parser's call stack is the Pushdown Automaton (PDA) that recognizes the language."
+
+  - layout: "split-diagram"
+    category: "AUTOMATA"
+    title: "From Grammar to Automaton"
+    subtitle: "Every grammar has a matching machine"
+    image: "assets/grammar-automata.svg"
+    caption: "Figure: Chomsky hierarchy — grammar types paired with recognizing automata."
+    image_position: "right"
+    bullets:
+      - "**Type 3 (Regular)**: Grammar pairs with a Finite Automaton — no memory beyond current state."
+      - "**Type 2 (Context-Free)**: Grammar pairs with a Pushdown Automaton — adds a stack for nesting."
+      - "**Type 1 (Context-Sensitive)**: Grammar pairs with a Linear-Bounded Automaton — tape bounded by input length."
+      - "**Type 0 (Unrestricted)**: Grammar pairs with a Turing Machine — infinite tape."
+    callout: "In a compiler, the lexer is a Type 3 machine (DFA), and the parser is a Type 2 machine (PDA). This pairing is the bridge from theory to implementation."
+
+  - layout: "stat-grid"
+    category: "CHOMSKY HIERARCHY"
+    title: "Where Formal Grammars Sit in the Hierarchy"
+    stats:
+      - value: "Type 0"
+        unit: "unrestricted"
+        label: "Recursively Enumerable"
+        description: "Recognized by Turing Machines; undecidable in general."
+      - value: "Type 1"
+        unit: "context-sensitive"
+        label: "Length-Bounded Rules"
+        description: "Recognized by Linear-Bounded Automata."
+      - value: "Type 2"
+        unit: "context-free"
+        label: "CFG — BNF/EBNF Live Here"
+        description: "Recognized by Pushdown Automata; used for parsing."
+      - value: "Type 3"
+        unit: "regular"
+        label: "Regex / Finite Automata"
+        description: "Used for tokenizing; cannot match balanced nesting."
+    summary: "**Key Point**: Programming language syntax lives in Type 2 (CFG). Token patterns live in Type 3 (regular). Both are formal grammars — just with different expressive power."
+
+  - layout: "comparison"
+    category: "CLASSIFICATION"
+    title: "Context-Free vs Context-Sensitive"
+    subtitle: "Why your compiler needs both"
+    left_title: "Context-Free (Type 2)"
+    left_bullets:
+      - "**Rule Shape**: LHS is a single non-terminal — no surrounding context."
+      - "**Strength**: Fast, deterministic parsers (LL, LR) exist."
+      - "**Limitation**: Cannot enforce declaration-before-use or type rules."
+    right_title: "Context-Sensitive (Type 1)"
+    right_bullets:
+      - "**Rule Shape**: $alpha A beta -> alpha gamma beta$ — context matters."
+      - "**Strength**: Can model variable scoping, matching, and cross-references."
+      - "**Limitation**: Parsing is expensive (PSPACE-complete); rarely used in practice."
+    conclusion: "Compilers split the work: CFG handles structure, and a separate semantic analyzer (symbol tables, type checkers) handles context."
+
+  - layout: "content"
+    category: "EDGE CASES"
+    title: "What Grammars Cannot Express"
+    subtitle: "The limits of context-free power"
+    bullets:
+      - "**Declaration Before Use**: 'Every variable must be declared before use' is context-sensitive — a CFG cannot enforce it."
+      - "**Type Checking**: 'Adding an int to a string is illegal' is a semantic rule, not a syntactic one."
+      - "**Matching Counts Across Categories**: a^n b^n c^n is not context-free — a CFG can match two counts but not three."
+      - "**Solution**: Compilers handle these in the semantic analyzer (symbol tables, type checkers), not the parser."
+    callout: "Syntax is what a grammar can check. Semantics is what a grammar cannot. That boundary is exactly where the parser ends and the semantic analyzer begins."
+
+  - layout: "content"
+    category: "SCOPE OF GRAMMAR"
+    title: "What Grammar Covers vs Doesn't"
+    subtitle: "Drawing the boundary clearly"
+    bullets:
+      - "**Grammar covers**: Token sequences, nesting structure, operator precedence, statement forms, block structure."
+      - "**Grammar does not cover**: Name resolution, type compatibility, aliasing, lifetime, side effects, evaluation order."
+      - "**Why the Split**: Keeping the parser fast is worth pushing harder checks into a separate pass."
+      - "**Practical Rule**: If it needs a symbol table, it is not grammar's job."
+    callout: "Every real compiler is a pipeline: lexer (Type 3), parser (Type 2), semantic analyzer (rules grammar cannot express). Grammar defines only the first two stages."
+
+  - layout: "content"
+    category: "GRAMMAR DESIGN"
+    title: "Designing an Unambiguous Grammar"
+    subtitle: "Three techniques that always work"
+    bullets:
+      - "**Precedence Layering**: Introduce one non-terminal per precedence level — $E$ for +, $T$ for `*`, $F$ for atoms."
+      - "**Associativity Encoding**: Left-associative uses left recursion ($E -> E + T$); right-associative uses right recursion."
+      - "**Eliminating Common Prefixes**: Factor $A -> alpha beta$ | $alpha gamma$ into $A -> alpha A'$, $A' -> beta$ | $gamma$ — needed for LL(1)."
+    callout: "Unambiguous grammars are not harder to write — they are harder to write casually. Layer, don't lump."
+
+  - layout: "content"
+    category: "GRAMMAR TRANSFORMATIONS"
+    title: "Rewriting Grammars for Parsers"
+    subtitle: "Same language, different shape"
+    bullets:
+      - "**Left Recursion Elimination**: $A -> A alpha$ | $beta$ becomes $A -> beta A'$, $A' -> alpha A'$ | $epsilon$ — needed for LL parsers."
+      - "**Left Factoring**: $A -> alpha beta$ | $alpha gamma$ becomes $A -> alpha A'$, $A' -> beta$ | $gamma$ — needed for LL(1)."
+      - "**Preserving Language**: Both transforms keep the generated language identical — only the derivation structure changes."
+      - "**Cost**: The new grammar may be less readable, and the parse tree may need post-processing."
+    callout: "A grammar is a *specification*. A parser is a *mechanism*. Rewriting grammars bridges the two without changing the language."
+
+  - layout: "code"
+    category: "TRANSFORMATIONS"
+    title: "Left Recursion Elimination in Code"
+    language: "python"
+    code: |
+      # Before (left recursive — cannot be parsed by LL):
+      #   E -> E + T | T
+      #   T -> T times F | F
+      #   F -> id
+
+      # After (right recursive — LL-friendly):
+      #   E  -> T E'
+      #   E' -> + T E' | epsilon
+      #   T  -> F T'
+      #   T' -> * F T' | epsilon
+      #   F  -> id
+
+      def parse_E(tokens):
+          left = parse_T(tokens)
+          return parse_E_prime(tokens, left)
+
+      def parse_E_prime(tokens, left):
+          while peek(tokens) == '+':
+              consume(tokens)
+              right = parse_T(tokens)
+              left = BinOp('+', left, right)
+          return left
+    bullets:
+      - "**Rule-for-Rule**: Each rewritten rule becomes one method — the shape mirrors the transformation."
+      - "**Loop Instead of Recursion**: The tail recursion of the rewritten grammar becomes a while loop."
+      - "**Same Language**: Both grammars accept identical strings; only the derivation structure changed."
+
+  - layout: "split-diagram"
+    category: "PARSING"
+    title: "Top-Down vs Bottom-Up Parsing"
+    subtitle: "Two strategies from the same grammar"
+    image: "assets/parsing-strategies.svg"
+    caption: "Figure: Top-down builds the tree from the root; bottom-up builds it from the leaves."
+    image_position: "right"
+    bullets:
+      - "**Top-Down (LL)**: Start at $S$, predict which rule to apply, descend to leaves — recursive descent or table-driven."
+      - "**Bottom-Up (LR)**: Start at tokens, reduce to larger structures, ascend to $S$ — shift-reduce parsers."
+      - "**LL Strength**: Simple to write by hand; requires left-recursion elimination and left factoring."
+      - "**LR Strength**: Handles more grammars (including left recursion); harder to write by hand but tools (Bison) generate them."
+    callout: "Both strategies recognize the same class of languages (deterministic CFLs) but with different mechanisms and grammar constraints."
+
+  - layout: "content"
+    category: "PARSING"
+    title: "LL(1) Parsing: The Table-Driven Approach"
+    subtitle: "Predict the rule from one lookahead token"
+    bullets:
+      - "**FIRST Set**: The set of terminals that can begin a string derived from a non-terminal — tells you which rule to pick."
+      - "**FOLLOW Set**: The set of terminals that can appear immediately after a non-terminal — used when a rule can derive $epsilon$."
+      - "**LL(1) Table**: Entry $M[A, a]$ gives the production to apply when the parser is at non-terminal $A$ and sees lookahead $a$."
+      - "**Determinism**: If any cell has more than one entry, the grammar is not LL(1) — needs rewriting."
+    callout: "LL(1) parsers are the workhorse of hand-written recursive descent. Compute FIRST and FOLLOW once, then parsing is O(n)."
+
+  - layout: "stat-grid"
+    category: "PARSING"
+    title: "Parser Family at a Glance"
+    stats:
+      - value: "LL(1)"
+        unit: "top-down"
+        label: "Predictive, Table-Driven"
+        description: "One lookahead token; simple, fast, restricted grammars."
+      - value: "LL(k)"
+        unit: "top-down"
+        label: "Generalized Lookahead"
+        description: "k tokens lookahead; more grammars, larger tables."
+      - value: "LR(1)"
+        unit: "bottom-up"
+        label: "Canonical LR"
+        description: "Powerful but large tables; handles most real grammars."
+      - value: "LALR(1)"
+        unit: "bottom-up"
+        label: "Look-Ahead LR"
+        description: "Used by Yacc/Bison; smaller tables, nearly LR(1) power."
+    summary: "**Practical Rule**: Hand-written parsers use LL(1). Generated parsers use LALR(1). Both are grammar-driven and both are O(n)."
+
+  - layout: "comparison"
+    category: "TRADE-OFFS"
+    title: "Hand-Written vs Generated Parsers"
+    subtitle: "Control vs convenience"
+    left_title: "Hand-Written (Recursive Descent)"
+    left_bullets:
+      - "**Strength**: Full control over error messages and recovery."
+      - "**Strength**: Easy to debug; direct grammar-to-code mapping."
+      - "**Limitation**: Must eliminate left recursion; repetitive code."
+    right_title: "Generated (ANTLR, Bison)"
+    right_bullets:
+      - "**Strength**: Write grammar, get parser — fast iteration."
+      - "**Strength**: LALR/LR handles left recursion directly."
+      - "**Limitation**: Error messages are tool-generated, often cryptic."
+    conclusion: "Production compilers often mix both: generated parser for speed of development, custom recovery layers for quality of diagnostics."
+
+  - layout: "content"
+    category: "REAL-WORLD"
+    title: "Grammars You Already Use"
+    subtitle: "Formal grammars hide in every spec you read"
+    bullets:
+      - "**JSON**: A tiny CFG — objects, arrays, strings, numbers — specified in EBNF in RFC 8259."
+      - "**Python**: The reference grammar lives in `Grammar/Grammar` — pure BNF, used by the CPython parser."
+      - "**SQL**: The SQL standard defines the grammar in BNF-like notation — hundreds of productions."
+      - "**HTTP**: The request/response grammar is defined in ABNF (a variant of BNF) in RFC 7230."
+    callout: "Whenever you read a language spec and see ::= or { }, you are reading a formal grammar — the same concepts from this lecture, in production."
+
+  - layout: "content"
+    category: "HISTORY"
+    title: "A Brief History of Grammar Notation"
+    subtitle: "From Panini to ANTLR"
+    bullets:
+      - "**~500 BCE — Panini**: Sanskrit grammar with ~4000 rules — the earliest formal grammar."
+      - "**1956 — Chomsky**: The hierarchy that classified grammars by expressive power."
+      - "**1959–1960 — Backus & Naur**: BNF introduced for ALGOL 58/60 — the first programming language grammar."
+      - "**1970s–present — Yacc, Bison, ANTLR**: Parser generators turn grammars into executable code."
+    callout: "Formal grammar is one of the oldest ideas in computer science — and one of the most reusable. The same theory runs every compiler today."
+
+  - layout: "content"
+    category: "SUMMARY"
+    title: "Key Takeaways"
+    subtitle: "What to remember from this lecture"
+    bullets:
+      - "**Grammar = Recipe**: A finite rule set that generates an infinite language via substitution (derivation)."
+      - "**Four Components**: $G = (V, T, P, S)$ — non-terminals, terminals, productions, start symbol."
+      - "**Two Directions**: Generation (grammar to string) and recognition (string to grammar) are the same relationship viewed both ways."
+      - "**Ambiguity**: Two parse trees for one string — fixed by layering precedence and associativity."
+    callout: "Grammar defines syntax. The parser recognizes it. The semantic analyzer handles everything grammar cannot. This division is the entire compiler frontend."
+
+  - layout: "content"
+    category: "SYNTHESIS"
+    title: "Mental Model: Grammar as a Lens"
+    subtitle: "One idea, four views"
+    bullets:
+      - "**As a Definition**: A grammar is a finite recipe that defines an infinite language by substitution."
+      - "**As a Generator**: Apply rules forward to produce valid strings — this is derivation."
+      - "**As a Recognizer**: Invert the rules to check if a string is valid — this is parsing."
+      - "**As a Compiler Artifact**: Grammar drives the lexer (Type 3), parser (Type 2), and AST shape."
+    callout: "Once you see every language — natural or programming — as a set of strings plus a grammar that generates them, the entire compiler pipeline becomes an exercise in bookkeeping."
+
+  - layout: "content"
+    category: "LOOKING AHEAD"
+    title: "Where We Go Next"
+    subtitle: "From grammar to working parsers"
+    bullets:
+      - "**Lexical Analysis**: Regex, NFAs, DFAs — the machine that turns characters into tokens."
+      - "**Top-Down Parsing**: Recursive descent, FIRST/FOLLOW sets, LL(1) tables."
+      - "**Bottom-Up Parsing**: Shift-reduce, LR(0), SLR, LALR, CLR."
+      - "**Semantic Analysis**: Symbol tables, attribute grammars, type checking — the rules grammar cannot express."
+    callout: "Formal grammar is the vocabulary. Parsing is the grammar in motion. Semantic analysis is the grammar's blind spot. Master all three and you understand the compiler frontend."
+
+  - layout: "content"
+    category: "EXERCISES"
+    title: "Practice Problems"
+    subtitle: "Test your understanding"
+    bullets:
+      - "**Derivation**: Derive 'aaabbb' from $S -> a S b$ | $epsilon$ using leftmost derivation. How many steps?"
+      - "**Ambiguity**: Show that $E -> E + E$ | $E times E$ | $i d$ is ambiguous by drawing two parse trees for `id + id * id`."
+      - "**BNF to EBNF**: Rewrite `<list> ::= <item> | <item> ',' <list>` in EBNF."
+      - "**Design**: Write a BNF grammar for 'a list of zero or more integers separated by commas, enclosed in square brackets'."
+    callout: "Do at least the first two. Grammar intuition comes from doing derivations by hand, not from reading them."
+
+  - layout: "content"
+    category: "FURTHER READING"
+    title: "Where to Go Deeper"
+    subtitle: "References for the curious"
+    bullets:
+      - "**Dragon Book**: Aho, Lam, Sethi, Ullman — *Compilers: Principles, Techniques, and Tools*, Chapters 2–4."
+      - "**Chomsky (1956)**: 'Three Models for the Description of Language' — the original hierarchy paper."
+      - "**ANTLR Reference**: Terence Parr — *The Definitive ANTLR 4 Reference* — grammars in practice."
+      - "**Crafting Interpreters**: Robert Nystrom — free online; builds a complete language from grammar to execution."
+    callout: "The Dragon Book is the canonical reference. Crafting Interpreters is the best hands-on companion. Read both in parallel."

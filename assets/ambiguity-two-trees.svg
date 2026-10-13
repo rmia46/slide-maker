@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 370" width="100%" height="100%">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect x="20" y="20" width="560" height="330" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="20" y="20" width="560" height="6" rx="3" fill="#65a30d"/>
+
+  <text x="300" y="45" font-family="Inter, sans-serif" font-size="12.5" font-weight="700" fill="#0f172a" text-anchor="middle">Input String: "id + id * id" — Ambiguous Grammar: E -> E + E | E * E | id</text>
+
+  <!-- Left Tree Box: Faulty Precedence (id + id) * id -->
+  <rect x="35" y="60" width="250" height="275" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.2"/>
+  <rect x="35" y="60" width="250" height="24" rx="4" fill="#fee2e2"/>
+  <text x="160" y="76" font-family="Inter, sans-serif" font-size="10.5" font-weight="700" fill="#991b1b" text-anchor="middle">Tree 1: (id + id) * id — Faulty</text>
+
+  <!-- Left Tree Root: * at top -->
+  <circle cx="160" cy="110" r="13" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="160" y="114" font-family="monospace" font-size="11" font-weight="700" fill="#991b1b" text-anchor="middle">E</text>
+
+  <!-- Root children: E, *, E -->
+  <line x1="150" y1="120" x2="105" y2="155" stroke="#dc2626" stroke-width="1.2"/>
+  <line x1="160" y1="123" x2="160" y2="155" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="170" y1="120" x2="225" y2="155" stroke="#64748b" stroke-width="1.2"/>
+
+  <!-- Left E (+) -->
+  <circle cx="105" cy="165" r="12" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="105" y="169" font-family="monospace" font-size="10.5" font-weight="700" fill="#991b1b" text-anchor="middle">E</text>
+
+  <!-- Middle * -->
+  <rect x="150" y="155" width="20" height="20" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="160" y="169" font-family="monospace" font-size="12" font-weight="700" fill="#dc2626" text-anchor="middle">*</text>
+
+  <!-- Right E (id) -->
+  <circle cx="225" cy="165" r="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="225" y="169" font-family="monospace" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">E</text>
+  <line x1="225" y1="177" x2="225" y2="220" stroke="#94a3b8" stroke-width="1.2"/>
+  <rect x="215" y="220" width="20" height="20" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="225" y="234" font-family="monospace" font-size="10" font-weight="700" fill="#0f172a" text-anchor="middle">id</text>
+
+  <!-- Left Subtree: E -> E + E -->
+  <line x1="97" y1="174" x2="65" y2="220" stroke="#64748b" stroke-width="1.2"/>
+  <line x1="105" y1="177" x2="105" y2="220" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="113" y1="174" x2="145" y2="220" stroke="#64748b" stroke-width="1.2"/>
+
+  <rect x="55" y="220" width="20" height="20" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="65" y="234" font-family="monospace" font-size="10" font-weight="700" fill="#0f172a" text-anchor="middle">id</text>
+
+  <rect x="95" y="220" width="20" height="20" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="105" y="234" font-family="monospace" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">+</text>
+
+  <rect x="135" y="220" width="20" height="20" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="145" y="234" font-family="monospace" font-size="10" font-weight="700" fill="#0f172a" text-anchor="middle">id</text>
+
+  <rect x="50" y="280" width="220" height="40" rx="4" fill="#ffffff" stroke="#fca5a5" stroke-width="1"/>
+  <text x="160" y="296" font-family="Inter, sans-serif" font-size="9.5" font-weight="700" fill="#dc2626" text-anchor="middle">Addition binds deeper</text>
+  <text x="160" y="311" font-family="Inter, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Evaluates as: (3 + 4) * 5 = 35</text>
+
+  <!-- Right Tree Box: Standard Precedence id + (id * id) -->
+  <rect x="315" y="60" width="250" height="275" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.2"/>
+  <rect x="315" y="60" width="250" height="24" rx="4" fill="#dcfce7"/>
+  <text x="440" y="76" font-family="Inter, sans-serif" font-size="10.5" font-weight="700" fill="#15803d" text-anchor="middle">Tree 2: id + (id * id) — Standard</text>
+
+  <!-- Right Tree Root: + at top -->
+  <circle cx="440" cy="110" r="13" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="440" y="114" font-family="monospace" font-size="11" font-weight="700" fill="#15803d" text-anchor="middle">E</text>
+
+  <!-- Root children: E, +, E -->
+  <line x1="430" y1="120" x2="365" y2="155" stroke="#64748b" stroke-width="1.2"/>
+  <line x1="440" y1="123" x2="440" y2="155" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="450" y1="120" x2="505" y2="155" stroke="#16a34a" stroke-width="1.2"/>
+
+  <!-- Left E (id) -->
+  <circle cx="365" cy="165" r="12" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="365" y="169" font-family="monospace" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">E</text>
+  <line x1="365" y1="177" x2="365" y2="220" stroke="#94a3b8" stroke-width="1.2"/>
+  <rect x="355" y="220" width="20" height="20" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="365" y="234" font-family="monospace" font-size="10" font-weight="700" fill="#0f172a" text-anchor="middle">id</text>
+
+  <!-- Middle + -->
+  <rect x="430" y="155" width="20" height="20" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="440" y="169" font-family="monospace" font-size="12" font-weight="700" fill="#16a34a" text-anchor="middle">+</text>
+
+  <!-- Right E (*) -->
+  <circle cx="505" cy="165" r="12" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="505" y="169" font-family="monospace" font-size="10.5" font-weight="700" fill="#15803d" text-anchor="middle">E</text>
+
+  <!-- Right Subtree: E -> E * E -->
+  <line x1="497" y1="174" x2="465" y2="220" stroke="#64748b" stroke-width="1.2"/>
+  <line x1="505" y1="177" x2="505" y2="220" stroke="#94a3b8" stroke-width="1.2"/>
+  <line x1="513" y1="174" x2="545" y2="220" stroke="#64748b" stroke-width="1.2"/>
+
+  <rect x="455" y="220" width="20" height="20" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="465" y="234" font-family="monospace" font-size="10" font-weight="700" fill="#0f172a" text-anchor="middle">id</text>
+
+  <rect x="495" y="220" width="20" height="20" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="505" y="234" font-family="monospace" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">*</text>
+
+  <rect x="535" y="220" width="20" height="20" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2"/>
+  <text x="545" y="234" font-family="monospace" font-size="10" font-weight="700" fill="#0f172a" text-anchor="middle">id</text>
+
+  <rect x="330" y="280" width="220" height="40" rx="4" fill="#ffffff" stroke="#86efac" stroke-width="1"/>
+  <text x="440" y="296" font-family="Inter, sans-serif" font-size="9.5" font-weight="700" fill="#16a34a" text-anchor="middle">Multiplication binds deeper</text>
+  <text x="440" y="311" font-family="Inter, sans-serif" font-size="9" fill="#64748b" text-anchor="middle">Evaluates as: 3 + (4 * 5) = 23 ✓</text>
+</svg>

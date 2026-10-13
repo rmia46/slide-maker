@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 370" width="100%" height="100%">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+
+  <rect x="20" y="20" width="560" height="330" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="20" y="20" width="560" height="6" rx="3" fill="#65a30d"/>
+
+  <text x="300" y="48" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">The Chomsky Hierarchy: Grammars &amp; Their Automata</text>
+
+  <!-- Type 3: Regular -->
+  <rect x="40" y="65" width="520" height="58" rx="6" fill="#f7fee7" stroke="#4d7c0f" stroke-width="1.5"/>
+  <rect x="40" y="65" width="110" height="58" rx="6" fill="#ecfccb"/>
+  <text x="95" y="92" font-family="Inter, sans-serif" font-size="11" font-weight="800" fill="#365314" text-anchor="middle">Type 3</text>
+  <text x="95" y="108" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#4d7c0f" text-anchor="middle">Regular</text>
+  <text x="170" y="90" font-family="monospace" font-size="10.5" font-weight="700" fill="#0f172a">A -> a B | a</text>
+  <text x="170" y="108" font-family="Inter, sans-serif" font-size="9" fill="#64748b">Lexical Tokens &amp; Scanner</text>
+  <rect x="360" y="78" width="180" height="32" rx="4" fill="#ffffff" stroke="#bef264" stroke-width="1.2"/>
+  <text x="450" y="98" font-family="Inter, sans-serif" font-size="9.5" font-weight="700" fill="#365314" text-anchor="middle">Finite Automaton (DFA/NFA)</text>
+
+  <!-- Type 2: Context-Free -->
+  <rect x="40" y="132" width="520" height="58" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+  <rect x="40" y="132" width="110" height="58" rx="6" fill="#dbeafe"/>
+  <text x="95" y="159" font-family="Inter, sans-serif" font-size="11" font-weight="800" fill="#1e40af" text-anchor="middle">Type 2</text>
+  <text x="95" y="175" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#2563eb" text-anchor="middle">Context-Free</text>
+  <text x="170" y="157" font-family="monospace" font-size="10.5" font-weight="700" fill="#0f172a">A -> γ (BNF / EBNF)</text>
+  <text x="170" y="175" font-family="Inter, sans-serif" font-size="9" fill="#64748b">Programming Language Syntax</text>
+  <rect x="360" y="145" width="180" height="32" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1.2"/>
+  <text x="450" y="165" font-family="Inter, sans-serif" font-size="9.5" font-weight="700" fill="#1e40af" text-anchor="middle">Pushdown Automaton (PDA)</text>
+
+  <!-- Type 1: Context-Sensitive -->
+  <rect x="40" y="200" width="520" height="58" rx="6" fill="#fdf4ff" stroke="#a855f7" stroke-width="1.5"/>
+  <rect x="40" y="200" width="110" height="58" rx="6" fill="#f3e8ff"/>
+  <text x="95" y="227" font-family="Inter, sans-serif" font-size="11" font-weight="800" fill="#6b21a8" text-anchor="middle">Type 1</text>
+  <text x="95" y="243" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#a855f7" text-anchor="middle">Context-Sensitive</text>
+  <text x="170" y="225" font-family="monospace" font-size="10.5" font-weight="700" fill="#0f172a">α A β -> α γ β</text>
+  <text x="170" y="243" font-family="Inter, sans-serif" font-size="9" fill="#64748b">Type checking &amp; semantics</text>
+  <rect x="360" y="213" width="180" height="32" rx="4" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.2"/>
+  <text x="450" y="233" font-family="Inter, sans-serif" font-size="9" font-weight="700" fill="#6b21a8" text-anchor="middle">Linear Bounded Automaton</text>
+
+  <!-- Type 0: Unrestricted -->
+  <rect x="40" y="268" width="520" height="58" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+  <rect x="40" y="268" width="110" height="58" rx="6" fill="#e2e8f0"/>
+  <text x="95" y="295" font-family="Inter, sans-serif" font-size="11" font-weight="800" fill="#334155" text-anchor="middle">Type 0</text>
+  <text x="95" y="311" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#64748b" text-anchor="middle">Unrestricted</text>
+  <text x="170" y="293" font-family="monospace" font-size="10.5" font-weight="700" fill="#0f172a">α -> β (arbitrary)</text>
+  <text x="170" y="311" font-family="Inter, sans-serif" font-size="9" fill="#64748b">Turing-complete computation</text>
+  <rect x="360" y="281" width="180" height="32" rx="4" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <text x="450" y="301" font-family="Inter, sans-serif" font-size="9.5" font-weight="700" fill="#334155" text-anchor="middle">Turing Machine</text>
+</svg>
