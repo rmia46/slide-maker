@@ -13,8 +13,14 @@ Designed for seamless **Human + AI** workflow:
 
 ## 1. Requirements & Setup
 
-### Core Requirement (PDF & Images)
-The core compiler requires only the standalone **Typst** binary:
+### 1. Clone the Repository
+```bash
+git clone https://github.com/rmia46/slide-maker.git
+cd slide-maker
+```
+
+### 2. Core Compiler (Required for PDF & Images)
+The compiler requires only the standalone **Typst** binary:
 
 - **Arch Linux**: `pacman -S typst`
 - **macOS**: `brew install typst`
@@ -24,7 +30,7 @@ The core compiler requires only the standalone **Typst** binary:
   mv typst-*/typst ~/.local/bin/
   ```
 
-### Optional: Python Environment (For PPTX Export)
+### 3. Optional: Python Environment (For PPTX Export)
 Building PDF slides requires no Python packages. To export editable PowerPoint decks (`./slide-maker export-pptx`) or enable deep YAML schema validation:
 
 ```bash
