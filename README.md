@@ -45,6 +45,9 @@ cat my_slides.yaml | ./slide-maker paste
 
 # Export each slide as high-res PNG (default: dist/slides/)
 ./slide-maker export-images [output_dir]
+
+# Export to native editable PowerPoint deck (default: slides.pptx)
+./slide-maker export-pptx [output.pptx]
 ```
 
 ---

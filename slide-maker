@@ -71,6 +71,15 @@ except Exception as e:
     echo "✓ Exported ${count} slides to ${OUT_DIR}/"
     ;;
 
+  export-pptx)
+    OUT_FILE="${2:-slides.pptx}"
+    PYTHON_CMD="python3"
+    if [ -f "$SCRIPT_DIR/.venv/bin/python" ]; then
+      PYTHON_CMD="$SCRIPT_DIR/.venv/bin/python"
+    fi
+    $PYTHON_CMD "$SCRIPT_DIR/scripts/export_pptx.py" "$OUT_FILE"
+    ;;
+
   help|--help|-h)
     echo "Usage: ./slide-maker [command]"
     echo ""
@@ -80,6 +89,7 @@ except Exception as e:
     echo "  check                    Validate syntax and structure of slides.yaml"
     echo "  watch                    Auto-recompile on every edit to slides.yaml"
     echo "  export-images [dir]      Render each slide as PNG (default: dist/slides/)"
+    echo "  export-pptx [file.pptx]  Export to native editable PowerPoint deck (default: slides.pptx)"
     echo "  help                     Show this help message"
     echo ""
     echo "Examples:"
